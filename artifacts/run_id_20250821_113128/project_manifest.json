@@ -1,0 +1,87 @@
+{
+  "run_id": "run_id_20250821_113128",
+  "project_name": "EMW (Enterprise Messaging for WhatsApp)",
+  "root": "/home/stev/Documentos/repos/humanizar/EMW",
+  "branch": "dev",
+  "commit": "N/A (not a git repository)",
+  "languages": ["TypeScript", "JavaScript", "JSON", "YAML", "Markdown"],
+  "package_managers": ["npm", "Node.js v22.18.0"],
+  "frameworks": {
+    "backend": ["NestJS", "TypeORM", "Express"],
+    "frontend": ["Next.js", "React", "Redux Toolkit"]
+  },
+  "architecture": "Full-stack application",
+  "database": ["MySQL", "Redis"],
+  "authentication": ["JWT", "Firebase", "Mock (configurable)"],
+  "version": "2.0.0",
+  "key_paths": {
+    "backend": {
+      "root": "emw-backend/",
+      "main": "index.ts",
+      "app_module": "app.module.ts",
+      "controllers": "controllers/",
+      "modules": "modules/",
+      "models": "models/",
+      "services": "services/",
+      "config": "config/",
+      "tests": "tests/"
+    },
+    "frontend": {
+      "root": "emw-frontend/",
+      "pages": "pages/",
+      "components": "src/components/",
+      "api": "src/api/",
+      "store": "src/store/",
+      "utils": "src/utils/"
+    }
+  },
+  "modules_identified": [
+    "auth",
+    "customers", 
+    "messages",
+    "templates",
+    "accounts",
+    "queue",
+    "webhook",
+    "metrics",
+    "customer-tags"
+  ],
+  "api_endpoints": {
+    "health": ["/health", "/config", "/wppMS"],
+    "auth": ["/auth/login", "/auth/register", "/auth/profile", "/auth/refresh"],
+    "customers": ["/customers (CRUD)", "/customers/import", "/customers/filter-by-tags"],
+    "messages": ["/messages/send", "/messages/bulk-send", "/messages (list)", "/messages/stats"],
+    "templates": ["/templates (CRUD)", "/templates/approved", "/templates/{id}/submit"],
+    "accounts": ["/accounts (CRUD)", "/accounts/active", "/accounts/{id}/set-active"],
+    "queue": ["/queue/jobs", "/queue/status", "/queue/retry-failed"],
+    "customer_tags": ["/customer-tags (CRUD)", "/customer-tags/assign", "/customer-tags/stats"],
+    "webhook": ["/webhook/whatsapp"]
+  },
+  "frontend_pages": [
+    "/login",
+    "/customers", 
+    "/messages",
+    "/templates",
+    "/whatsapp-sessions",
+    "/contact",
+    "/plans",
+    "/robot",
+    "/edit_user"
+  ],
+  "features": [
+    "WhatsApp Business API integration",
+    "Customer management with tagging system",
+    "Template management with approval workflow", 
+    "Message queuing and bulk sending",
+    "Webhook processing",
+    "Multi-auth support (JWT/Firebase/Mock)",
+    "CSV import functionality",
+    "Real-time messaging",
+    "Role-based access control"
+  ],
+  "testing_coverage": {
+    "backend_tests": "tests/ directory with shell scripts",
+    "frontend_tests": "Basic lint and format checks",
+    "integration_tests": "Webhook integration tests"
+  }
+}

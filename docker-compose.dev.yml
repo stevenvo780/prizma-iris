@@ -1,0 +1,83 @@
+# EMW Dev Stack – docker-compose
+# DB: pgram en humanizar2 (100.98.5.11:5432) via NetBird VPN
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: emw_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    networks:
+      - emw_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./emw-backend
+      dockerfile: Dockerfile.dev
+    container_name: emw_backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - AUTH_MODE=jwt
+      - DB_HOST=100.98.5.11
+      - DB_PORT=5432
+      - DB_USERNAME=emwuser
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=ewm
+      - DB_SYNCHRONIZE=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=emw_jwt_dev_secret_2025
+      - JWT_EXPIRES_IN=24h
+      - WHATSAPP_TOKEN=${WHATSAPP_TOKEN:-placeholder}
+      - WHATSAPP_PHONE_NUMBER_ID=${WHATSAPP_PHONE_NUMBER_ID:-placeholder}
+      - WHATSAPP_BUSINESS_ACCOUNT_ID=${WHATSAPP_BUSINESS_ACCOUNT_ID:-placeholder}
+      - WEBHOOK_VERIFY_TOKEN=emw_webhook_dev_token
+      - APP_URL=http://localhost:3001
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - ./emw-backend:/app
+      - /app/node_modules
+      - /app/dist
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - emw_network
+    restart: unless-stopped
+    command: npm run dev:docker
+
+  frontend:
+    build:
+      context: ./emw-frontend
+      dockerfile: Dockerfile.dev
+    container_name: emw_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001/api
+      - NEXT_PUBLIC_APP_NAME=EMW - Enhanced Marketing WhatsApp
+      - NODE_ENV=development
+    volumes:
+      - ./emw-frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - emw_network
+    restart: unless-stopped
+    command: sh -c "npm install && npm run dev"
+
+networks:
+  emw_network:
+    driver: bridge

@@ -1,0 +1,17 @@
+{
+  "run_id": "run_id_qa_20250821_144528",
+  "utc": "2025-08-21T19:45:28Z",
+  "branch": "unknown",
+  "commit": "unknown",
+  "playwright_version": "latest",
+  "browser": "chromium",
+  "base_url": "http://localhost:3000",
+  "env": "development",
+  "tz": "UTC",
+  "locale": "en-US",
+  "test_suite": "EMW_Casos_Uso_QA",
+  "total_casos": 8,
+  "casos_criticos": [1, 2, 3, 4],
+  "casos_importantes": [5, 6, 7],
+  "casos_operacionales": [8]
+}

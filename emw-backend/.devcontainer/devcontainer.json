@@ -1,0 +1,24 @@
+
+
+{
+	"name": "EMW Backend",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/emw_backend",
+	"forwardPorts": [5000],
+	"postCreateCommand": "npm install"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

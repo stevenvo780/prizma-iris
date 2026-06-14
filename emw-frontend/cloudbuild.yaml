@@ -1,0 +1,45 @@
+steps:
+  # Build frontend image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/emergent-enterprises/emw-frontend:latest'
+      - '-f'
+      - 'Dockerfile'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_API_URL=https://emw-backend-633619052458.us-central1.run.app/api'
+      - '.'
+    dir: '.'
+
+  # Push frontend image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/emergent-enterprises/emw-frontend:latest'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'emw-frontend'
+      - '--image=gcr.io/emergent-enterprises/emw-frontend:latest'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=3000'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--timeout=60'
+      - '--min-instances=0'
+      - '--max-instances=10'
+      - '--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://emw-backend-633619052458.us-central1.run.app/api'
+
+images:
+  - 'gcr.io/emergent-enterprises/emw-frontend:latest'
+
+options:
+  machineType: 'E2_MEDIUM'
+  logging: CLOUD_LOGGING_ONLY

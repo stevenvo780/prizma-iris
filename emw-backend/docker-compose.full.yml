@@ -1,0 +1,57 @@
+# EMW Full Stack – DEV local
+# DB: pgram en humanizar2 (100.98.5.11:5432) via NetBird VPN
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: emw-redis
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - emw-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: emw-backend
+    env_file: .env
+    ports:
+      - "3001:3001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - emw-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../emw-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    container_name: emw-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:3001
+      NEXT_PUBLIC_WS_URL: ws://localhost:3001
+      NEXT_PUBLIC_APP_NAME: EMW - Enhanced Marketing WhatsApp
+      NEXT_PUBLIC_VERSION: 2.0.0
+      NODE_ENV: development
+      NEXT_PUBLIC_DEBUG_MODE: "true"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - emw-network
+    restart: unless-stopped
+
+networks:
+  emw-network:
+    driver: bridge

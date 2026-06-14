@@ -1,0 +1,18 @@
+{
+  "run_id": "run_id_20250821_120512",
+  "utc": "2025-08-21T17:05:12Z",
+  "branch": "dev",
+  "commit": "HEAD",
+  "browser": "chromium",
+  "base_url": "http://localhost:3000",
+  "backend_url": "http://localhost:3001",
+  "env": "development",
+  "tz": "UTC",
+  "locale": "en-US",
+  "whatsapp_config": {
+    "phone_number_id": "750244271496352",
+    "business_account_id": "1057090109719595",
+    "app_id": "743177541504666",
+    "test_numbers": ["+573003008055", "+573046374368", "+573172786691"]
+  }
+}

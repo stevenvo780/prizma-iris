@@ -1,0 +1,11 @@
+{
+  "status": "healthy",
+  "timestamp": "2025-08-01T00:12:00Z",
+  "version": "1.0.0",
+  "services": {
+    "database": "connected",
+    "redis": "connected",
+    "whatsapp": "ready"
+  },
+  "uptime": 3600
+}

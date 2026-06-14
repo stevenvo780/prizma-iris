@@ -1,0 +1,36 @@
+
+.register-form-container {
+  position: relative;
+  top: 20px;
+  width: 100%;
+  max-width: 80%;
+  padding: 20px;
+  margin: 0 auto;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+  border-radius: 5px;
+}
+
+.register-form {
+  width: 100%;
+}
+
+.register-form label {
+  margin-bottom: 10px;
+}
+
+.register-form .form-control {
+  margin-top: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.register-form .btn-primary {
+  padding: 10px 20px;
+  margin-top: 20px;
+}
+
+.register-form .btn-primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

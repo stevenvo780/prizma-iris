@@ -1,0 +1,48 @@
+# ─── Dependencias y build artifacts ───
+node_modules/
+dist/
+
+# ─── Docker ───
+Dockerfile
+Dockerfile.dev
+docker-compose*.yml
+.dockerignore
+
+# ─── Tests y scripts ───
+tests/
+scripts/
+
+# ─── Git ───
+.git/
+.gitignore
+
+# ─── IDE / Editor ───
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Logs ───
+logs/
+*.log
+npm-debug.log*
+
+# ─── OS ───
+.DS_Store
+Thumbs.db
+
+# ─── Docs ───
+README.md
+*.md
+
+# ─── Config innecesaria en build ───
+cookies.txt
+payload.json
+cloudbuild.yaml
+firebase.json
+firestore.rules
+firestore.indexes.json
+
+# ─── Mantener .env (necesario para config de producción) ───
+!.env
+!.env.*

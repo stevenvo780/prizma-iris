@@ -1,0 +1,26 @@
+{
+  "root": "/home/stev/Documentos/repos/humanizar/EMW",
+  "branch": "main",
+  "commit": "local",
+  "languages": ["TypeScript", "JavaScript"],
+  "managers": ["npm", "docker", "docker-compose"],
+  "frameworks": ["NestJS", "Next.js", "TypeORM", "MySQL", "Redis"],
+  "key_paths": {
+    "backend": "emw-backend/",
+    "frontend": "emw-frontend/", 
+    "docker_compose": "docker-compose.dev.yml",
+    "env_file": ".env",
+    "cases_doc": "EMW_Casos_Uso_QA.md"
+  },
+  "services": {
+    "backend": { "port": 3001, "tech": "NestJS + TypeScript" },
+    "frontend": { "port": 3000, "tech": "Next.js + React" },
+    "database": { "port": 3306, "tech": "MySQL 8.0" },
+    "cache": { "port": 6379, "tech": "Redis 7" }
+  },
+  "whatsapp_integration": {
+    "provider": "Meta WhatsApp Business API",
+    "configured": true,
+    "phone_id": "750244271496352"
+  }
+}

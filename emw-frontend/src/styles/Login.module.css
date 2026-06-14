@@ -1,0 +1,36 @@
+.loginContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('../../public/img/fondo_login.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden; /* Evita el scroll */
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+}
+
+.forgotPasswordLink {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.modalBackground {
+  background-color: #F4F4F5;
+}
+
+.full-width {
+  width: 100%;
+}

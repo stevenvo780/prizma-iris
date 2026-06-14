@@ -1,0 +1,22 @@
+{
+  "run_id": "run_id_20250821_113128",
+  "utc": "2025-08-21T16:31:00Z",
+  "branch": "dev", 
+  "commit": "N/A",
+  "node_version": "v22.18.0",
+  "environment": "development",
+  "timezone": "UTC",
+  "locale": "es",
+  "analysis_summary": {
+    "controllers_analyzed": 12,
+    "modules_analyzed": 9,
+    "api_endpoints_identified": "50+",
+    "frontend_pages_identified": 8,
+    "test_cases_generated": "150+"
+  },
+  "outputs": [
+    "EMW_QA_Testing_Guide.md",
+    "project_manifest.json",
+    "run.json"
+  ]
+}

@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Multi-tenant: accounts/{accountId}/chats/{phone}/messages/{msgId}
+    // La seguridad se gestiona en el backend (JWT + userId filter).
+    // El frontend solo lee en tiempo real con filtro por userId.
+    match /accounts/{accountId}/chats/{phone} {
+      allow read, write: if true;
+
+      match /messages/{msgId} {
+        allow read, write: if true;
+      }
+    }
+
+    // Legacy path (read-only, para transición)
+    match /chats/{phone} {
+      allow read: if true;
+      match /messages/{msgId} {
+        allow read: if true;
+      }
+    }
+  }
+}
