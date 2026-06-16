@@ -5,6 +5,12 @@ node_modules/
 dist/
 *.tsbuildinfo
 
+# olympo-payments-pkg ships its PREBUILT dist (1.0.1); the global dist/ rule
+# above would strip it, so re-include the vendored package explicitly.
+!olympo-payments-pkg/
+!olympo-payments-pkg/dist/
+!olympo-payments-pkg/dist/**
+
 # Environment files
 .env
 .env.local

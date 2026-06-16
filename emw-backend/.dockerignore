@@ -1,6 +1,14 @@
 # ─── Dependencias y build artifacts ───
 node_modules/
 dist/
+# contracts-pkg/src and package.json are included for multi-stage build
+# contracts-pkg/dist is excluded by dist/ above (rebuilt in stage 0)
+# contracts-pkg/node_modules excluded by node_modules/ above
+# olympo-payments-pkg ships its PREBUILT dist (1.0.1) — re-include it even
+# though the global dist/ rule above would otherwise strip it.
+!olympo-payments-pkg/
+!olympo-payments-pkg/dist/
+!olympo-payments-pkg/dist/**
 
 # ─── Docker ───
 Dockerfile
