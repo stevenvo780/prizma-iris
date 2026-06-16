@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import Head from 'next/head';
-import { Button, Container, Row, Col, Card, Modal, Form, Badge } from 'react-bootstrap';
+import { Button, Card, CardBody, Modal, Badge, Input } from 'prizma-ui';
 import Image from 'next/image';
 import {
   FaApple, FaMicrosoft, FaFacebook, FaWhatsapp, FaUsers, FaChartLine,
@@ -87,12 +87,12 @@ const Landing = () => {
   return (
     <>
       <Head>
-        <title>EMW — Enterprise WhatsApp Messaging | Olympo</title>
+        <title>Iris — Enterprise WhatsApp Messaging | Prizma</title>
         <meta
           name="description"
-          content="EMW, la plataforma de WhatsApp Business API de Olympo: gestiona conversaciones, envía campañas masivas y automatiza respuestas para hacer crecer tu negocio."
+          content="Iris, la plataforma de WhatsApp Business API de Prizma: gestiona conversaciones, envía campañas masivas y automatiza respuestas para hacer crecer tu negocio."
         />
-        <link rel="icon" href="/img/cauce-favicon.svg" />
+        <link rel="icon" href="/img/prizma-favicon.svg" />
       </Head>
       <Events />
 
@@ -102,30 +102,36 @@ const Landing = () => {
         background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(0,0,0,0.08)', padding: '12px 0',
       }}>
-        <Container className="d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center gap-2" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={() => scrollTo('hero')}>
-            <Image src={logo} alt="EMW" width={40} height={40} />
-            <span className="d-none d-sm-inline" style={{ fontWeight: 700, fontSize: '1.3rem', color: '#0a827f' }}>EMW</span>
+        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', flexShrink: 0 }} onClick={() => scrollTo('hero')}>
+            <Image src={logo} alt="Iris" width={40} height={40} />
+            <span className="d-none d-sm-inline" style={{ fontWeight: 700, fontSize: '1.3rem', color: '#0a827f' }}>Iris</span>
           </div>
-          <div className="d-none d-md-flex gap-4 align-items-center">
+          <div className="d-none d-md-flex" style={{ gap: 32, alignItems: 'center' }}>
             <a onClick={() => scrollTo('features')} style={{ cursor: 'pointer', color: '#555', fontWeight: 500, textDecoration: 'none' }}>Funcionalidades</a>
             <a onClick={() => scrollTo('plans')} style={{ cursor: 'pointer', color: '#555', fontWeight: 500, textDecoration: 'none' }}>Planes</a>
           </div>
-          <div className="d-flex gap-2">
-            <Button size="sm" onClick={() => setShowLoginModal(true)}
-              className="nav-btn-login"
-              style={{ borderRadius: 20, padding: '6px 16px', background: 'transparent', border: '2px solid #0a827f', color: '#0a827f', fontWeight: 600, whiteSpace: 'nowrap' }}>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowLoginModal(true)}
+              style={{ borderRadius: 20, padding: '6px 16px', border: '2px solid #0a827f', color: '#0a827f', fontWeight: 600, whiteSpace: 'nowrap' }}
+            >
               <span className="d-none d-sm-inline">Iniciar sesión</span>
               <span className="d-sm-none">Entrar</span>
             </Button>
-            <Button size="sm" onClick={() => setShowRegisterModal(true)}
-              className="nav-btn-register"
-              style={{ borderRadius: 20, padding: '6px 16px', background: '#0a827f', border: 'none', color: '#fff', fontWeight: 600, whiteSpace: 'nowrap' }}>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => setShowRegisterModal(true)}
+              style={{ borderRadius: 20, padding: '6px 16px', background: '#0a827f', border: 'none', color: '#fff', fontWeight: 600, whiteSpace: 'nowrap' }}
+            >
               <span className="d-none d-sm-inline">Registrarse</span>
               <span className="d-sm-none">Registro</span>
             </Button>
           </div>
-        </Container>
+        </div>
       </nav>
 
       {/* ───── HERO ───── */}
@@ -139,10 +145,10 @@ const Landing = () => {
           position: 'absolute', inset: 0,
           backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%)',
         }} />
-        <Container style={{ position: 'relative', zIndex: 1 }}>
-          <Row className="align-items-center">
-            <Col lg={7} className="text-white mb-5 mb-lg-0 text-center text-lg-start">
-              <Badge bg="light" text="dark" className="mb-3" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="row align-items-center">
+            <div className="col-lg-7 text-white mb-5 mb-lg-0 text-center text-lg-start">
+              <Badge tone="neutral" className="mb-3" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                 <FaRocket style={{ color: '#0a827f' }} /> WhatsApp Business API al mejor precio
               </Badge>
               <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: 24 }}>
@@ -155,79 +161,98 @@ const Landing = () => {
                 Gestiona conversaciones, envía campañas masivas, automatiza respuestas y haz crecer tu negocio
                 con la plataforma más completa de WhatsApp Business API.
               </p>
-              <div className="d-flex gap-3 flex-wrap justify-content-center justify-content-lg-start">
-                <Button size="lg" onClick={() => setShowRegisterModal(true)} style={{
-                  background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
-                  borderRadius: 30, padding: '14px 36px', fontWeight: 700, fontSize: '1.1rem',
-                  boxShadow: '0 4px 20px rgba(243,156,18,0.4)',
-                }}>
-                  Comenzar gratis <FaArrowRight style={{ marginLeft: 8 }} />
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }} className="justify-content-lg-start">
+                <Button
+                  size="lg"
+                  variant="accent"
+                  onClick={() => setShowRegisterModal(true)}
+                  rightIcon={<FaArrowRight />}
+                  style={{
+                    background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
+                    borderRadius: 30, padding: '14px 36px', fontWeight: 700, fontSize: '1.1rem',
+                    boxShadow: '0 4px 20px rgba(243,156,18,0.4)',
+                  }}
+                >
+                  Comenzar gratis
                 </Button>
-                <Button variant="outline-light" size="lg" onClick={() => scrollTo('features')} style={{
-                  borderRadius: 30, padding: '14px 36px', fontWeight: 600, fontSize: '1.05rem', borderWidth: 2,
-                }}>
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  onClick={() => scrollTo('features')}
+                  style={{ borderRadius: 30, padding: '14px 36px', fontWeight: 600, fontSize: '1.05rem', border: '2px solid white', color: 'white' }}
+                >
                   Ver funcionalidades
                 </Button>
               </div>
-              <div className="d-flex flex-wrap gap-2 gap-md-4 mt-4 justify-content-center justify-content-lg-start" style={{ opacity: 0.8, fontSize: '0.9rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 16, opacity: 0.8, fontSize: '0.9rem' }} className="justify-content-center justify-content-lg-start">
                 <span><FaCheck className="me-1" /> CRM integrado</span>
                 <span><FaCheck className="me-1" /> Soporte técnico dedicado</span>
                 <span><FaCheck className="me-1" /> Configuración en minutos</span>
               </div>
-            </Col>
-            <Col lg={5} className="text-center">
+            </div>
+            <div className="col-lg-5 text-center">
               <div className="hero-login-card" style={{
                 background: 'rgba(255,255,255,0.12)', borderRadius: 24, padding: 40,
                 backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.2)',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
               }}>
-                <Image src={logo} alt="EMW Logo" width={100} height={100} />
-                <h3 className="text-white mt-3 mb-2" style={{ fontWeight: 700 }}>EMW Platform</h3>
+                <Image src={logo} alt="Iris Logo" width={100} height={100} />
+                <h3 className="text-white mt-3 mb-2" style={{ fontWeight: 700 }}>Iris Platform</h3>
                 <p className="text-white mb-4" style={{ opacity: 0.85 }}>Enterprise WhatsApp Messaging</p>
-                <div className="d-grid gap-2">
-                  <Button onClick={() => setShowLoginModal(true)} style={{
-                    background: 'white', color: '#0a827f', border: 'none',
-                    borderRadius: 12, padding: '12px', fontWeight: 700, fontSize: '1.05rem',
-                  }}>
+                <div style={{ display: 'grid', gap: 8 }}>
+                  <Button
+                    onClick={() => setShowLoginModal(true)}
+                    variant="secondary"
+                    block
+                    style={{
+                      background: 'white', color: '#0a827f', border: 'none',
+                      borderRadius: 12, padding: '12px', fontWeight: 700, fontSize: '1.05rem',
+                    }}
+                  >
                     Iniciar sesión
                   </Button>
-                  <Button onClick={() => setShowRegisterModal(true)} style={{
-                    background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
-                    borderRadius: 12, padding: '12px', fontWeight: 700, fontSize: '1.05rem',
-                  }}>
+                  <Button
+                    onClick={() => setShowRegisterModal(true)}
+                    variant="accent"
+                    block
+                    style={{
+                      background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
+                      borderRadius: 12, padding: '12px', fontWeight: 700, fontSize: '1.05rem',
+                    }}
+                  >
                     Crear cuenta gratis
                   </Button>
                 </div>
               </div>
-            </Col>
-          </Row>
-        </Container>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ───── STATS BAR ───── */}
       <section style={{ background: '#fff', padding: '40px 0', borderBottom: '1px solid #eee' }}>
-        <Container>
-          <Row className="text-center">
+        <div className="container">
+          <div className="row text-center">
             {[
               { num: '10K+', label: 'Mensajes enviados' },
               { num: '99.9%', label: 'Uptime garantizado' },
               { num: '24/7', label: 'Soporte técnico' },
               { num: '< 1s', label: 'Tiempo de entrega' },
             ].map((s, i) => (
-              <Col xs={6} md={3} key={i} className="mb-3 mb-md-0">
+              <div className="col-6 col-md-3 mb-3 mb-md-0" key={i}>
                 <h2 style={{ fontWeight: 800, color: '#0a827f', fontSize: '2rem', marginBottom: 4 }}>{s.num}</h2>
                 <p style={{ color: '#888', margin: 0, fontSize: '0.95rem' }}>{s.label}</p>
-              </Col>
+              </div>
             ))}
-          </Row>
-        </Container>
+          </div>
+        </div>
       </section>
 
       {/* ───── FEATURES ───── */}
       <section id="features" className="section-responsive" style={{ padding: 'clamp(40px, 8vw, 80px) 0', background: '#f8f9fa' }}>
-        <Container>
+        <div className="container">
           <div className="text-center mb-5">
-            <Badge bg="success" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, marginBottom: 16, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Badge tone="success" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, marginBottom: 16, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               <HiSparkles /> Funcionalidades
             </Badge>
             <h2 style={{ fontWeight: 800, fontSize: 'clamp(1.6rem, 4vw, 2.3rem)', color: '#222' }}>Todo lo que necesitas para tu negocio</h2>
@@ -235,15 +260,18 @@ const Landing = () => {
               Una plataforma completa para gestionar tus comunicaciones por WhatsApp de forma profesional y escalable.
             </p>
           </div>
-          <Row>
+          <div className="row">
             {features.map((f, i) => (
-              <Col md={6} lg={3} key={i} className="mb-4">
-                <Card className="feature-card" style={{
-                  border: 'none', borderRadius: 16, height: '100%',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.06)', transition: 'transform 0.2s, box-shadow 0.2s',
-                }}>
-                  <Card.Body className="p-4 text-center text-md-start">
-                    <div className="d-flex justify-content-center justify-content-md-start">
+              <div className="col-md-6 col-lg-3 mb-4" key={i}>
+                <Card
+                  className="feature-card"
+                  style={{
+                    border: 'none', borderRadius: 16, height: '100%',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.06)', transition: 'transform 0.2s, box-shadow 0.2s',
+                  }}
+                >
+                  <CardBody style={{ padding: 24, textAlign: 'center' }} className="text-md-start">
+                    <div style={{ display: 'flex', justifyContent: 'center' }} className="justify-content-md-start">
                       <div style={{
                         width: 60, height: 60, borderRadius: 14,
                         background: `${f.color}15`, display: 'flex',
@@ -255,19 +283,19 @@ const Landing = () => {
                     </div>
                     <h5 style={{ fontWeight: 700, color: '#222', marginBottom: 10 }}>{f.title}</h5>
                     <p style={{ color: '#666', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>{f.desc}</p>
-                  </Card.Body>
+                  </CardBody>
                 </Card>
-              </Col>
+              </div>
             ))}
-          </Row>
-        </Container>
+          </div>
+        </div>
       </section>
 
       {/* ───── PLANS ───── */}
       <section id="plans" className="section-responsive" style={{ padding: 'clamp(40px, 8vw, 80px) 0', background: '#fff' }}>
-        <Container>
+        <div className="container">
           <div className="text-center mb-5">
-            <Badge style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, marginBottom: 16, background: '#0a827f', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Badge tone="primary" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, marginBottom: 16, background: '#0a827f', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               <FaGem /> Planes
             </Badge>
             <h2 style={{ fontWeight: 800, fontSize: 'clamp(1.6rem, 4vw, 2.3rem)', color: '#222' }}>Un solo plan, todo incluido</h2>
@@ -275,8 +303,8 @@ const Landing = () => {
               Sin letras pequeñas. Accede a todas las funcionalidades con nuestro plan Premium.
             </p>
           </div>
-          <Row className="justify-content-center">
-            <Col md={8} lg={6}>
+          <div className="row justify-content-center">
+            <div className="col-md-8 col-lg-6">
               <Card style={{
                 border: '3px solid #0a827f', borderRadius: 24, overflow: 'hidden',
                 boxShadow: '0 12px 40px rgba(10,130,127,0.15)',
@@ -285,8 +313,8 @@ const Landing = () => {
                   background: 'linear-gradient(135deg, #0a827f, #0d9e9a)',
                   padding: '30px 24px', textAlign: 'center', color: 'white',
                 }}>
-                  <Badge bg="warning" text="dark" className="mb-2" style={{ fontSize: '0.8rem', padding: '6px 14px', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                    <FaStar /> MÁS POPULAR
+                  <Badge tone="warning" className="mb-2" style={{ fontSize: '0.8rem', padding: '6px 14px', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <FaStar /> MAS POPULAR
                   </Badge>
                   <h3 style={{ fontWeight: 800, marginBottom: 8 }}>Plan Premium</h3>
                   <div style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', fontWeight: 800, lineHeight: 1 }}>
@@ -294,7 +322,7 @@ const Landing = () => {
                   </div>
                   <p style={{ opacity: 0.85, marginTop: 8, marginBottom: 0 }}>Todo incluido, sin límites ocultos</p>
                 </div>
-                <Card.Body className="p-4">
+                <CardBody style={{ padding: 24 }}>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {planFeatures.map((feat, i) => (
                       <li key={i} style={{
@@ -307,21 +335,28 @@ const Landing = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button onClick={() => setShowRegisterModal(true)} className="w-100 mt-4" size="lg" style={{
-                    background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
-                    borderRadius: 14, padding: '14px', fontWeight: 700, fontSize: '1.1rem',
-                    boxShadow: '0 4px 20px rgba(243,156,18,0.3)',
-                  }}>
-                    Comenzar ahora <FaArrowRight style={{ marginLeft: 8 }} />
+                  <Button
+                    onClick={() => setShowRegisterModal(true)}
+                    variant="accent"
+                    block
+                    size="lg"
+                    rightIcon={<FaArrowRight />}
+                    style={{
+                      background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
+                      borderRadius: 14, padding: '14px', fontWeight: 700, fontSize: '1.1rem',
+                      boxShadow: '0 4px 20px rgba(243,156,18,0.3)', marginTop: 16,
+                    }}
+                  >
+                    Comenzar ahora
                   </Button>
                   <p className="text-center mt-3" style={{ color: '#888', fontSize: '0.85rem', margin: 0 }}>
                     <FaShieldAlt className="me-1" /> Pago seguro con MercadoPago · Cancela cuando quieras
                   </p>
-                </Card.Body>
+                </CardBody>
               </Card>
-            </Col>
-          </Row>
-        </Container>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ───── CTA FINAL ───── */}
@@ -330,128 +365,198 @@ const Landing = () => {
         background: 'linear-gradient(135deg, #0a827f 0%, #0d9e9a 50%, #25D366 100%)',
         textAlign: 'center', color: 'white',
       }}>
-        <Container>
+        <div className="container">
           <FaBolt size={48} style={{ opacity: 0.6, marginBottom: 20 }} />
           <h2 style={{ fontWeight: 800, fontSize: 'clamp(1.6rem, 4vw, 2.3rem)', marginBottom: 16 }}>
             ¿Listo para transformar tu comunicación?
           </h2>
           <p style={{ fontSize: '1.2rem', opacity: 0.9, maxWidth: 600, margin: '0 auto 32px' }}>
-            Únete a las empresas que ya están potenciando su negocio con EMW.
+            Únete a las empresas que ya están potenciando su negocio con Iris.
             Comienza gratis y escala cuando lo necesites.
           </p>
-          <div className="d-flex gap-3 justify-content-center flex-wrap">
-            <Button size="lg" onClick={() => setShowRegisterModal(true)} style={{
-              background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
-              borderRadius: 30, padding: '14px 40px', fontWeight: 700, fontSize: '1.1rem',
-              boxShadow: '0 4px 20px rgba(243,156,18,0.4)',
-            }}>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Button
+              size="lg"
+              variant="accent"
+              onClick={() => setShowRegisterModal(true)}
+              style={{
+                background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
+                borderRadius: 30, padding: '14px 40px', fontWeight: 700, fontSize: '1.1rem',
+                boxShadow: '0 4px 20px rgba(243,156,18,0.4)',
+              }}
+            >
               Crear cuenta gratis
             </Button>
-            <Button variant="outline-light" size="lg" onClick={() => setShowLoginModal(true)} style={{
-              borderRadius: 30, padding: '14px 40px', fontWeight: 600, fontSize: '1.05rem', borderWidth: 2,
-            }}>
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={() => setShowLoginModal(true)}
+              style={{ borderRadius: 30, padding: '14px 40px', fontWeight: 600, fontSize: '1.05rem', border: '2px solid white', color: 'white' }}
+            >
               Ya tengo cuenta
             </Button>
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* ───── FOOTER ───── */}
       <footer style={{ background: '#1a1a2e', color: 'rgba(255,255,255,0.6)', padding: '40px 0', textAlign: 'center' }}>
-        <Container>
-          <div className="d-flex align-items-center justify-content-center gap-2 mb-3">
-            <Image src={logo} alt="EMW" width={32} height={32} />
-            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'white' }}>EMW</span>
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 12 }}>
+            <Image src={logo} alt="Iris" width={32} height={32} />
+            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'white' }}>Iris</span>
           </div>
           <p style={{ margin: 0, fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
-            © {new Date().getFullYear()} EMW — Enterprise WhatsApp Messaging by{' '}
+            © {new Date().getFullYear()} Iris — Enterprise WhatsApp Messaging by{' '}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/img/cauce-symbol.svg" alt="" width={18} height={18} style={{ borderRadius: 4 }} />
-            <a href="https://www.humanizar.co" target="_blank" rel="noopener noreferrer" style={{ color: '#0a827f' }}>Olympo</a>
+            <img src="/img/prizma-symbol.svg" alt="" width={18} height={18} style={{ borderRadius: 4 }} />
+            <a href="https://prisma-enterprice.cloud" target="_blank" rel="noopener noreferrer" style={{ color: '#0a827f' }}>Steven Vallejo</a>
           </p>
-        </Container>
+        </div>
       </footer>
 
       {/* ───── MODAL LOGIN ───── */}
-      <Modal show={showLoginModal} onHide={() => setShowLoginModal(false)} centered>
-        <Modal.Header closeButton style={{ border: 'none', paddingBottom: 0 }}>
-          <Modal.Title className="w-100 text-center" style={{ fontWeight: 700 }}>
-            <Image src={logo} alt="EMW" width={48} height={48} /><br />
+      <Modal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title={
+          <div style={{ textAlign: 'center', fontWeight: 700, width: '100%' }}>
+            <Image src={logo} alt="Iris" width={48} height={48} /><br />
             Iniciar sesión
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="px-4 pb-4">
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formLoginEmail" className="mb-3">
-              <Form.Control placeholder="Correo electrónico" type="text" value={email}
-                onChange={e => setEmail(e.target.value)} style={{ borderRadius: 10, padding: '12px 16px' }} />
-            </Form.Group>
-            <Form.Group controlId="formLoginPassword" className="mb-3">
-              <Form.Control placeholder="Contraseña" type="password" value={password}
-                onChange={e => setPassword(e.target.value)} style={{ borderRadius: 10, padding: '12px 16px' }} />
-            </Form.Group>
-            <Button className="w-100 mb-3" type="submit" disabled={isLoading} style={{
-              background: '#0a827f', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 600,
-            }}>
-              {isLoading ? 'Cargando...' : 'Iniciar sesión'}
+          </div>
+        }
+      >
+        <form onSubmit={handleSubmit} style={{ padding: '0 8px 8px' }}>
+          <div style={{ marginBottom: 12 }}>
+            <label htmlFor='login-email' style={{ display: 'block', marginBottom: 4, fontSize: '0.875rem', fontWeight: 500 }}>
+              Correo electrónico
+            </label>
+            <Input
+              id='login-email'
+              placeholder="Correo electrónico"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              style={{ borderRadius: 10, padding: '12px 16px' }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: 12 }}>
+            <label htmlFor='login-password' style={{ display: 'block', marginBottom: 4, fontSize: '0.875rem', fontWeight: 500 }}>
+              Contraseña
+            </label>
+            <Input
+              id='login-password'
+              placeholder="Contraseña"
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              style={{ borderRadius: 10, padding: '12px 16px' }}
+              required
+            />
+          </div>
+          <Button
+            block
+            type="submit"
+            disabled={isLoading}
+            variant="primary"
+            style={{ background: '#0a827f', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 600, marginBottom: 8 }}
+          >
+            {isLoading ? 'Cargando...' : 'Iniciar sesión'}
+          </Button>
+          <Button
+            block
+            variant="secondary"
+            style={{ borderRadius: 10, padding: '12px', marginBottom: 8 }}
+            onClick={() => { setShowLoginModal(false); setShowProviderModal(true); }}
+          >
+            Continuar con Google, Apple, Facebook o Microsoft
+          </Button>
+          <div style={{ textAlign: 'center', marginTop: 8 }}>
+            <Button
+              variant="link"
+              size="sm"
+              style={{ color: '#0a827f' }}
+              onClick={() => { setShowLoginModal(false); setShowPasswordResetModal(true); }}
+            >
+              ¿Olvidaste tu contraseña?
             </Button>
-            <Button className="w-100 mb-2" variant="secondary" style={{ borderRadius: 10, padding: '12px' }}
-              onClick={() => { setShowLoginModal(false); setShowProviderModal(true); }}>
-              Continuar con Google, Apple, Facebook o Microsoft
+          </div>
+          <hr />
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ color: '#888', fontSize: '0.9rem' }}>¿No tienes cuenta? </span>
+            <Button
+              variant="link"
+              size="sm"
+              style={{ color: '#0a827f', fontWeight: 600 }}
+              onClick={() => { setShowLoginModal(false); setShowRegisterModal(true); }}
+            >
+              Regístrate
             </Button>
-            <div className="text-center mt-2">
-              <Button variant="link" size="sm" style={{ color: '#0a827f' }}
-                onClick={() => { setShowLoginModal(false); setShowPasswordResetModal(true); }}>
-                ¿Olvidaste tu contraseña?
-              </Button>
-            </div>
-            <hr />
-            <div className="text-center">
-              <span style={{ color: '#888', fontSize: '0.9rem' }}>¿No tienes cuenta? </span>
-              <Button variant="link" size="sm" style={{ color: '#0a827f', fontWeight: 600 }}
-                onClick={() => { setShowLoginModal(false); setShowRegisterModal(true); }}>
-                Regístrate
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
+          </div>
+        </form>
       </Modal>
 
       {/* ───── MODAL PROVIDERS ───── */}
-      <Modal show={showProviderModal} onHide={() => setShowProviderModal(false)} centered>
-        <Modal.Header closeButton style={{ border: 'none' }}>
-          <Modal.Title className="w-100 text-center" style={{ fontWeight: 700 }}>Elige un proveedor</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="d-flex flex-column align-items-center px-4 pb-4">
-          <Button className="w-100 btn-secondary mb-3 d-flex align-items-center" style={{ borderRadius: 10, padding: '12px 16px' }}
-            onClick={() => handleLoginWithProvider('google')}>
+      <Modal
+        open={showProviderModal}
+        onClose={() => setShowProviderModal(false)}
+        title={<div style={{ textAlign: 'center', fontWeight: 700, width: '100%' }}>Elige un proveedor</div>}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 8px 8px' }}>
+          <Button
+            block
+            variant="secondary"
+            style={{ borderRadius: 10, padding: '12px 16px', marginBottom: 12, display: 'flex', alignItems: 'center' }}
+            onClick={() => handleLoginWithProvider('google')}
+          >
             <FcGoogle size={24} />
-            <span className="flex-grow-1 text-center">Continuar con Google</span>
+            <span style={{ flexGrow: 1, textAlign: 'center' }}>Continuar con Google</span>
           </Button>
-          <Button disabled className="w-100 btn-secondary mb-3 d-flex align-items-center" style={{ borderRadius: 10, padding: '12px 16px' }}
-            onClick={() => handleLoginWithProvider('apple')}>
+          <Button
+            disabled
+            block
+            variant="secondary"
+            style={{ borderRadius: 10, padding: '12px 16px', marginBottom: 12, display: 'flex', alignItems: 'center' }}
+            onClick={() => handleLoginWithProvider('apple')}
+          >
             <FaApple size={24} />
-            <span className="flex-grow-1 text-center">Continuar con Apple</span>
+            <span style={{ flexGrow: 1, textAlign: 'center' }}>Continuar con Apple</span>
           </Button>
-          <Button disabled className="w-100 btn-secondary mb-3 d-flex align-items-center" style={{ borderRadius: 10, padding: '12px 16px' }}
-            onClick={() => handleLoginWithProvider('microsoft')}>
+          <Button
+            disabled
+            block
+            variant="secondary"
+            style={{ borderRadius: 10, padding: '12px 16px', marginBottom: 12, display: 'flex', alignItems: 'center' }}
+            onClick={() => handleLoginWithProvider('microsoft')}
+          >
             <FaMicrosoft size={24} style={{ color: '#F3BA2F' }} />
-            <span className="flex-grow-1 text-center">Continuar con Microsoft</span>
+            <span style={{ flexGrow: 1, textAlign: 'center' }}>Continuar con Microsoft</span>
           </Button>
-          <Button disabled className="w-100 btn-secondary d-flex align-items-center" style={{ borderRadius: 10, padding: '12px 16px' }}
-            onClick={() => handleLoginWithProvider('facebook')}>
+          <Button
+            disabled
+            block
+            variant="secondary"
+            style={{ borderRadius: 10, padding: '12px 16px', display: 'flex', alignItems: 'center' }}
+            onClick={() => handleLoginWithProvider('facebook')}
+          >
             <FaFacebook size={24} style={{ color: '#4267B2' }} />
-            <span className="flex-grow-1 text-center">Continuar con Facebook</span>
+            <span style={{ flexGrow: 1, textAlign: 'center' }}>Continuar con Facebook</span>
           </Button>
           {process.env.NODE_ENV === 'development' && (
             <>
-              <hr className="w-100" />
-              <Button className="w-100 btn-warning d-flex align-items-center justify-content-center gap-2" onClick={autoLoginForDev}>
+              <hr style={{ width: '100%' }} />
+              <Button
+                block
+                variant="accent"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                onClick={autoLoginForDev}
+              >
                 <FaWrench /> Auto-Login (Desarrollo)
               </Button>
             </>
           )}
-        </Modal.Body>
+        </div>
       </Modal>
 
       <Register show={showRegisterModal} handleClose={() => setShowRegisterModal(false)} />
