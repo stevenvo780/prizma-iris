@@ -6,7 +6,9 @@ import { User, UserRole } from '../auth/entities/user.entity';
 import { Payment, PaymentStatus, PaymentProvider } from './entities/payment.entity';
 import { Customer } from '../customers/entities/customer.entity';
 import { MessageLog, MessageDirection } from '../messages/entities/message-log.entity';
-import { MercadoPagoConfig, Preference, Payment as MPPayment } from 'mercadopago';
+import { MercadoPagoGateway } from 'prizma-payments';
+import { EVENTS } from 'prizma-contracts';
+import { PrizmaHubService } from '../prizma/prizma-hub.service';
 import { FREE_PLAN_LIMITS } from '../customers/customers.service';
 
 export interface CreatePreferenceDto {
@@ -22,22 +24,57 @@ interface PlanConfig {
   role: UserRole;
 }
 
+/** URL del webhook único del Hub al que MP enviará todas las notificaciones. */
+const HUB_MP_WEBHOOK_URL =
+  process.env.PRIZMA_HUB_WEBHOOK_URL ||
+  'https://prizma-nous-578238159459.us-central1.run.app/webhooks/mercadopago';
+
+/**
+ * Construye el externalReference canónico de Iris según el contrato
+ * PAYMENTS_MIGRATION.md (Apéndice A): `<producto>:<kind>:<id>`.
+ *
+ * `iris:plan:<userId>` — El Hub lo parsea como:
+ *   producto = "iris", kind = "plan", id = userId
+ */
+function buildExternalRef(userId: string, planKey: string): string {
+  return `iris:plan:${userId}:${planKey}`;
+}
+
+/**
+ * Mapeo de estados MP → PaymentStatus local.
+ * Se aplica tanto al webhook directo (legado local) como al evento del Hub.
+ */
+const STATUS_MAP: Record<string, PaymentStatus> = {
+  approved: PaymentStatus.APPROVED,
+  rejected: PaymentStatus.REJECTED,
+  cancelled: PaymentStatus.CANCELLED,
+  refunded: PaymentStatus.REFUNDED,
+  in_process: PaymentStatus.IN_PROCESS,
+  pending: PaymentStatus.PENDING,
+};
+
 @Injectable()
 export class PaymentsService {
   private readonly logger = new Logger(PaymentsService.name);
-  private mpClient: MercadoPagoConfig;
+
+  /**
+   * Gateway de Mercado Pago (prizma-payments).
+   * Instanciación LAZY: el constructor NO lanza si faltan credenciales.
+   * La app arranca siempre; la validación de token ocurre solo al cobrar.
+   */
+  private readonly gateway: MercadoPagoGateway;
 
   private readonly plans: Record<string, PlanConfig> = {
     premium_monthly: {
-      title: 'Plan Especial EMW - Mensual',
-      description: 'Acceso completo a todas las funcionalidades premium de EMW por 1 mes',
+      title: 'Plan Especial Iris - Mensual',
+      description: 'Acceso completo a todas las funcionalidades premium de Iris por 1 mes',
       price: 88000,
       currency: 'COP',
       role: UserRole.PREMIUM,
     },
     premium_annual: {
-      title: 'Plan Especial EMW - Anual',
-      description: 'Acceso completo a todas las funcionalidades premium de EMW por 1 año (20% descuento)',
+      title: 'Plan Especial Iris - Anual',
+      description: 'Acceso completo a todas las funcionalidades premium de Iris por 1 año (20% descuento)',
       price: 844800, // 88000 * 12 * 0.8
       currency: 'COP',
       role: UserRole.PREMIUM,
@@ -54,21 +91,22 @@ export class PaymentsService {
     @InjectRepository(MessageLog)
     private messageLogRepository: Repository<MessageLog>,
     private configService: ConfigService,
+    private readonly prizmaHub: PrizmaHubService,
   ) {
-    const accessToken = this.configService.get<string>('MP_ACCESS_TOKEN');
-    if (accessToken) {
-      this.mpClient = new MercadoPagoConfig({ accessToken });
-      this.logger.log('Mercado Pago SDK initialized');
+    // Gateway lazy: lee MP_ACCESS_TOKEN / MP_WEBHOOK_SECRET desde env.
+    // Si aún no están cargados el boot NO falla; la primera llamada a cobrar sí.
+    this.gateway = new MercadoPagoGateway();
+
+    if (this.gateway.isConfigured()) {
+      this.logger.log('MercadoPagoGateway (prizma-payments) initialized');
     } else {
-      this.logger.warn('MP_ACCESS_TOKEN not configured - payments will not work');
+      this.logger.warn(
+        'MP_ACCESS_TOKEN not configured — payments will fail at runtime, but boot is OK',
+      );
     }
   }
 
   async createPreference(dto: CreatePreferenceDto, userId: string) {
-    if (!this.mpClient) {
-      throw new BadRequestException('Payment provider not configured');
-    }
-
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -80,13 +118,12 @@ export class PaymentsService {
       throw new BadRequestException(`Invalid plan: ${planKey}`);
     }
 
-    const externalReference = `emw_${userId}_${Date.now()}`;
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'https://emw.humanizar.cloud';
+    const externalReference = buildExternalRef(userId, planKey);
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'https://emw.humanizar.cloud';
 
-    const preferenceApi = new Preference(this.mpClient);
-
-    const preferenceData = {
-      body: {
+    try {
+      const result = await this.gateway.createCheckout({
         items: [
           {
             id: planKey,
@@ -102,25 +139,21 @@ export class PaymentsService {
           name: user.firstName,
           surname: user.lastName,
         },
+        externalReference,
+        notification_url: HUB_MP_WEBHOOK_URL,
         back_urls: {
           success: `${frontendUrl}/plans?status=approved`,
           failure: `${frontendUrl}/plans?status=rejected`,
           pending: `${frontendUrl}/plans?status=pending`,
         },
-        auto_return: 'approved' as const,
-        external_reference: externalReference,
-        notification_url: `${this.configService.get<string>('BACKEND_URL') || 'https://emw-backend-633619052458.us-central1.run.app'}/api/payments/webhook`,
-        statement_descriptor: 'EMW Premium',
+        auto_return: 'approved',
+        statement_descriptor: 'Iris Premium',
         binary_mode: false,
-      },
-    };
-
-    try {
-      const response = await preferenceApi.create(preferenceData);
+      });
 
       // Guardar el registro de pago en DB
       const payment = this.paymentRepository.create({
-        preferenceId: response.id,
+        preferenceId: result.id,
         status: PaymentStatus.PENDING,
         provider: PaymentProvider.MERCADOPAGO,
         amount: plan.price,
@@ -134,12 +167,23 @@ export class PaymentsService {
 
       await this.paymentRepository.save(payment);
 
-      this.logger.log(`Preference created: ${response.id} for user ${userId}`);
+      // Publicar evento pago.iniciado en el Hub (best-effort)
+      await this.prizmaHub.publish(EVENTS.PAGO_INICIADO, {
+        paymentRef: payment.id,
+        gateway: 'mercadopago',
+        tipo: 'checkout',
+        monto: plan.price,
+        moneda: plan.currency,
+        externalReference,
+        preferenceId: result.id,
+      });
+
+      this.logger.log(`Preference created: ${result.id} for user ${userId}, externalRef=${externalReference}`);
 
       return {
-        preferenceId: response.id,
-        initPoint: response.init_point,
-        sandboxInitPoint: response.sandbox_init_point,
+        preferenceId: result.id,
+        initPoint: result.init_point,
+        sandboxInitPoint: result.sandbox_init_point,
       };
     } catch (error: any) {
       this.logger.error(`Error creating preference: ${error.message}`, error.stack);
@@ -147,6 +191,12 @@ export class PaymentsService {
     }
   }
 
+  /**
+   * handleWebhook — procesamiento del webhook directo de MP.
+   * En la arquitectura objetivo el Hub recibe los webhooks y nos entrega
+   * eventos vía `handleHubPaymentEvent`. Este endpoint queda como fallback
+   * por si el Hub aún no está en producción para Iris.
+   */
   async handleWebhook(body: any) {
     this.logger.log(`Webhook received: ${JSON.stringify(body)}`);
 
@@ -158,10 +208,11 @@ export class PaymentsService {
       }
 
       try {
-        const mpPaymentApi = new MPPayment(this.mpClient);
-        const mpPayment = await mpPaymentApi.get({ id: paymentId });
+        const mpPayment = await this.gateway.getPayment(String(paymentId));
 
-        this.logger.log(`MP Payment ${paymentId}: status=${mpPayment.status}, external_ref=${mpPayment.external_reference}`);
+        this.logger.log(
+          `MP Payment ${paymentId}: status=${mpPayment.status}, external_ref=${mpPayment.external_reference}`,
+        );
 
         // Buscar el pago local por external_reference
         const localPayment = await this.paymentRepository.findOne({
@@ -169,72 +220,139 @@ export class PaymentsService {
         });
 
         if (!localPayment) {
-          this.logger.warn(`No local payment found for external_reference: ${mpPayment.external_reference}`);
+          this.logger.warn(
+            `No local payment found for external_reference: ${mpPayment.external_reference}`,
+          );
           return { received: true };
         }
-
-        // Actualizar estado del pago
-        const statusMap: Record<string, PaymentStatus> = {
-          approved: PaymentStatus.APPROVED,
-          rejected: PaymentStatus.REJECTED,
-          cancelled: PaymentStatus.CANCELLED,
-          refunded: PaymentStatus.REFUNDED,
-          in_process: PaymentStatus.IN_PROCESS,
-          pending: PaymentStatus.PENDING,
-        };
 
         // Guard de idempotencia: verificar si ya estaba approved ANTES de actualizar
         const wasAlreadyApproved = localPayment.status === PaymentStatus.APPROVED;
 
         localPayment.mpPaymentId = String(paymentId);
-        localPayment.status = statusMap[mpPayment.status] || PaymentStatus.PENDING;
-        localPayment.mpResponse = {
-          status: mpPayment.status,
-          status_detail: mpPayment.status_detail,
-          payment_method_id: mpPayment.payment_method_id,
-          payment_type_id: mpPayment.payment_type_id,
-          transaction_amount: mpPayment.transaction_amount,
-          date_approved: mpPayment.date_approved,
-          payer: mpPayment.payer,
-        };
+        localPayment.status = STATUS_MAP[mpPayment.status] || PaymentStatus.PENDING;
+        localPayment.mpResponse = mpPayment.raw as Record<string, any>;
 
         await this.paymentRepository.save(localPayment);
 
-        // Si el pago fue aprobado Y no era ya approved (idempotencia), actualizar usuario
+        // Si el pago fue aprobado y no era ya approved (idempotencia), actualizar usuario
         if (mpPayment.status === 'approved' && !wasAlreadyApproved) {
-          const user = await this.userRepository.findOne({ where: { id: localPayment.userId } });
-          if (user) {
-            user.role = UserRole.PREMIUM;
-            user.credits = localPayment.amount; // Último monto pagado (no acumulativo)
+          await this._upgradeUserToPremium(localPayment);
 
-            // Calcular fecha de expiración según periodicidad
-            // Si la suscripción aún no expiró, extender desde la fecha actual de expiración
-            const now = new Date();
-            const baseDate = (user.subscriptionExpiresAt && user.subscriptionExpiresAt > now)
-              ? user.subscriptionExpiresAt
-              : now;
-            const periodicity = localPayment.planPeriodicity || 'monthly';
-            if (periodicity === 'annual') {
-              user.subscriptionExpiresAt = new Date(baseDate.getTime() + 365 * 24 * 60 * 60 * 1000);
-            } else {
-              user.subscriptionExpiresAt = new Date(baseDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-            }
-            this.logger.log(`Subscription extended from ${baseDate.toISOString()} to ${user.subscriptionExpiresAt.toISOString()}`);
-            user.subscriptionPlanType = periodicity;
-            user.subscriptionCancelledAt = null; // Limpiar cancelación previa
-
-            await this.userRepository.save(user);
-            this.logger.log(
-              `User ${user.id} upgraded to PREMIUM (${periodicity}), expires at ${user.subscriptionExpiresAt.toISOString()}`,
-            );
-          }
+          // Publicar evento pago.aprobado al Hub (best-effort)
+          await this.prizmaHub.publish(EVENTS.PAGO_APROBADO, {
+            paymentRef: localPayment.id,
+            gateway: 'mercadopago',
+            monto: localPayment.amount,
+            moneda: localPayment.currency,
+            externalReference: localPayment.externalReference,
+            mpPaymentId: String(paymentId),
+            status: mpPayment.status,
+          });
         }
       } catch (error: any) {
-        this.logger.error(`Error processing webhook for payment ${paymentId}: ${error.message}`, error.stack);
+        this.logger.error(
+          `Error processing webhook for payment ${paymentId}: ${error.message}`,
+          error.stack,
+        );
       }
     }
 
     return { received: true };
+  }
+
+  /**
+   * handleHubPaymentEvent — receptor del evento que el Hub entrega a Iris
+   * tras procesar un webhook de MP.
+   *
+   * Endpoint: POST /api/webhooks/payments
+   * Headers: x-prizma-event (eventType), x-prizma-signature
+   * Body: { eventType, paymentRef, externalReference, mpPaymentId?, ... }
+   *
+   * Ver PAYMENTS_MIGRATION.md §Apéndice A.
+   */
+  async handleHubPaymentEvent(eventType: string, payload: Record<string, any>) {
+    this.logger.log(`Hub payment event: ${eventType} — ${JSON.stringify(payload)}`);
+
+    if (eventType === EVENTS.PAGO_APROBADO) {
+      const { externalReference, mpPaymentId } = payload;
+      if (!externalReference) {
+        this.logger.warn('Hub event pago.aprobado sin externalReference');
+        return;
+      }
+
+      const localPayment = await this.paymentRepository.findOne({
+        where: { externalReference },
+      });
+
+      if (!localPayment) {
+        this.logger.warn(`No local payment for externalRef: ${externalReference}`);
+        return;
+      }
+
+      // Idempotencia: no acreditar dos veces
+      if (localPayment.status === PaymentStatus.APPROVED) {
+        this.logger.log(`Payment ${localPayment.id} ya aprobado (idempotencia Hub)`);
+        return;
+      }
+
+      if (mpPaymentId) {
+        localPayment.mpPaymentId = String(mpPaymentId);
+      }
+      localPayment.status = PaymentStatus.APPROVED;
+      await this.paymentRepository.save(localPayment);
+
+      await this._upgradeUserToPremium(localPayment);
+    } else if (eventType === EVENTS.PAGO_RECHAZADO) {
+      const { externalReference } = payload;
+      if (!externalReference) return;
+
+      const localPayment = await this.paymentRepository.findOne({
+        where: { externalReference },
+      });
+      if (localPayment && localPayment.status === PaymentStatus.PENDING) {
+        localPayment.status = PaymentStatus.REJECTED;
+        await this.paymentRepository.save(localPayment);
+        this.logger.log(`Payment ${localPayment.id} marcado como REJECTED por Hub`);
+      }
+    }
+    // Eventos de suscripción reservados para futura implementación de PreApproval
+  }
+
+  /**
+   * Lógica de negocio: actualizar usuario a PREMIUM tras pago aprobado.
+   * Incluye cálculo de expiración y extensión de suscripción activa.
+   */
+  private async _upgradeUserToPremium(localPayment: Payment) {
+    const user = await this.userRepository.findOne({ where: { id: localPayment.userId } });
+    if (!user) return;
+
+    user.role = UserRole.PREMIUM;
+    user.credits = localPayment.amount;
+
+    const now = new Date();
+    const baseDate =
+      user.subscriptionExpiresAt && user.subscriptionExpiresAt > now
+        ? user.subscriptionExpiresAt
+        : now;
+    const periodicity = localPayment.planPeriodicity || 'monthly';
+
+    if (periodicity === 'annual') {
+      user.subscriptionExpiresAt = new Date(baseDate.getTime() + 365 * 24 * 60 * 60 * 1000);
+    } else {
+      user.subscriptionExpiresAt = new Date(baseDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+    }
+
+    this.logger.log(
+      `Subscription extended from ${baseDate.toISOString()} to ${user.subscriptionExpiresAt.toISOString()}`,
+    );
+    user.subscriptionPlanType = periodicity;
+    user.subscriptionCancelledAt = null;
+
+    await this.userRepository.save(user);
+    this.logger.log(
+      `User ${user.id} upgraded to PREMIUM (${periodicity}), expires at ${user.subscriptionExpiresAt.toISOString()}`,
+    );
   }
 
   async getPaymentStatus(preferenceId: string, userId: string) {
@@ -293,7 +411,7 @@ export class PaymentsService {
     };
 
     if (details.amount > 0) {
-      user.credits = Number(user.credits) + (details.amount * 100);
+      user.credits = Number(user.credits) + details.amount * 100;
       if (details.planType === 'premium') {
         user.role = UserRole.PREMIUM;
       }
@@ -330,12 +448,14 @@ export class PaymentsService {
       credits: user.credits,
       role: user.role,
       status: user.status,
-      lastPayment: lastApprovedPayment ? {
-        id: lastApprovedPayment.id,
-        amount: lastApprovedPayment.amount,
-        date: lastApprovedPayment.createdAt,
-        planType: lastApprovedPayment.planType,
-      } : null,
+      lastPayment: lastApprovedPayment
+        ? {
+            id: lastApprovedPayment.id,
+            amount: lastApprovedPayment.amount,
+            date: lastApprovedPayment.createdAt,
+            planType: lastApprovedPayment.planType,
+          }
+        : null,
       timestamp: new Date().toISOString(),
     };
   }
@@ -418,7 +538,9 @@ export class PaymentsService {
       messagesPerDay: {
         sent: messagesToday,
         max: isPremium ? null : FREE_PLAN_LIMITS.MAX_MESSAGES_PER_DAY,
-        remaining: isPremium ? null : Math.max(0, FREE_PLAN_LIMITS.MAX_MESSAGES_PER_DAY - messagesToday),
+        remaining: isPremium
+          ? null
+          : Math.max(0, FREE_PLAN_LIMITS.MAX_MESSAGES_PER_DAY - messagesToday),
       },
       bulkRecipients: {
         max: isPremium ? null : FREE_PLAN_LIMITS.MAX_BULK_RECIPIENTS,
@@ -460,7 +582,7 @@ export class PaymentsService {
 
     return {
       isPremium,
-      plan: isPremium ? (user.subscriptionPlanType || 'monthly') : 'free',
+      plan: isPremium ? user.subscriptionPlanType || 'monthly' : 'free',
       subscriptionExpiresAt: expiresAt,
       daysRemaining: isPremium ? daysRemaining : null,
       isCancelled,
