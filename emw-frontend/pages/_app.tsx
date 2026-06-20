@@ -4,11 +4,12 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../src/store';
 import Layout from '../src/components/Layout';
-import { ThemeProvider } from '@olympo/ui';
+import { ThemeProvider } from 'prizma-ui';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'prizma-tokens/prizma.css';
 import '../src/styles/globals.css';
-import '@olympo/ui/styles.css';
-import '../src/styles/cauce-brand.css';
+import 'prizma-ui/styles.css';
+import '../src/styles/prizma-brand.css';
 import { useRouter } from 'next/router';
 
 function AppContent({ Component, pageProps }: AppProps) {
@@ -31,7 +32,7 @@ export default function MyApp(appProps: AppProps) {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider defaultTheme="light">
-          <div className="cui-root" data-module="emw">
+          <div className="cui-root" data-module="iris">
             <AppContent {...appProps} />
           </div>
         </ThemeProvider>
