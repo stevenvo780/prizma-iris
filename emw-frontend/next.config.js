@@ -1,10 +1,11 @@
 module.exports = {
   output: 'standalone',
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    // ignoreBuildErrors: false (remover el flag que ocultaba errores TS)
+    // Errors deben ser arreglados antes de mergear o bloqueados en pre-commit
   },
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   images: {

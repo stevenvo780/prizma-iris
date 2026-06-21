@@ -31,7 +31,7 @@ if [ -z "$AUTH_TOKEN" ]; then
 fi
 
 # Temporary files
-TEMP_DIR="/tmp/emw-queue-test"
+TEMP_DIR="/tmp/iris-queue-test"
 mkdir -p "$TEMP_DIR"
 
 # Cleanup function

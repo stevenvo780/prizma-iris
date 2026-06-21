@@ -1,9 +1,9 @@
-# 🧪 Reporte de Edge Cases — Sistema de Pagos EMW
+# 🧪 Reporte de Edge Cases — Sistema de Pagos IRIS
 
 **Fecha:** 2026-02-16  
-**Ambiente:** Producción (https://emw.humanizar.cloud)  
-**Backend:** emw-backend-00080-pwx  
-**Frontend:** emw-frontend-00072-5n6  
+**Ambiente:** Producción (https://iris.prizma.cloud)  
+**Backend:** iris-backend-00080-pwx  
+**Frontend:** iris-frontend-00072-5n6  
 
 ---
 
@@ -31,7 +31,7 @@
 - **Causa:** El `useEffect` en `PremiumBanner.tsx` dependía solo de `user?.role`, pero el token de Firebase no estaba disponible cuando el efecto se disparaba por primera vez.
 - **Fix:** Agregada dependencia `token` al `useEffect`: `[user?.role, token]`
 - **Impacto:** Las barras de progreso ahora aparecen correctamente después de ~2-3 segundos cuando Firebase restaura la sesión.
-- **Archivo:** `emw-frontend/src/components/PremiumBanner.tsx`
+- **Archivo:** `iris-frontend/src/components/PremiumBanner.tsx`
 
 ---
 

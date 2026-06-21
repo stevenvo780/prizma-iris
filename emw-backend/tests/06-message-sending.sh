@@ -20,7 +20,7 @@ if [ -z "$AUTH_TOKEN" ]; then
         exit 1
     fi
 
-    TMP_AUTH_DIR="/tmp/emw-msg-auth"
+    TMP_AUTH_DIR="/tmp/iris-msg-auth"
     mkdir -p "$TMP_AUTH_DIR"
     TEST_EMAIL="msg_$(date +%s)@example.com"
     cat > "$TMP_AUTH_DIR/register.json" <<EOF
@@ -62,7 +62,7 @@ EOF
 fi
 
 # Temporary files
-TEMP_DIR="/tmp/emw-message-test"
+TEMP_DIR="/tmp/iris-message-test"
 mkdir -p "$TEMP_DIR"
 
 # Cleanup function
@@ -102,7 +102,7 @@ TEXT_MESSAGE_DATA="{
     \"accountId\": \"test-account-id\",
     \"type\": \"text\",
     \"recipient\": \"$TEST_PHONE\",
-    \"content\": \"Hello, this is a test message from EMW Platform!\",
+    \"content\": \"Hello, this is a test message from IRIS Platform!\",
     \"priority\": 1
 }"
 
@@ -139,7 +139,7 @@ TEMPLATE_MESSAGE_DATA="{
     \"type\": \"template\",
     \"recipient\": \"$TEST_PHONE\",
     \"templateId\": \"welcome_message\",
-    \"templateParams\": [\"John Doe\", \"EMW Platform\", \"123456\"],
+    \"templateParams\": [\"John Doe\", \"IRIS Platform\", \"123456\"],
     \"priority\": 1
 }"
 

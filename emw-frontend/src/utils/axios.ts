@@ -10,8 +10,10 @@ const getApiBaseUrl = (): string => {
     const hostname = window.location.hostname;
 
     // Producción: Cloud Run o dominio personalizado
-    if (hostname.includes('run.app') || hostname.includes('emw-frontend') || hostname.includes('humanizar.cloud')) {
-      return 'https://emw-backend-6dalnsowyq-uc.a.run.app/api';
+    // URL debe venir de NEXT_PUBLIC_API_URL; no hardcodear en código
+    if (hostname.includes('run.app') || hostname.includes('iris-frontend') || hostname.includes('prizma.cloud')) {
+      console.warn('Warning: NEXT_PUBLIC_API_URL not set. Using localhost fallback.');
+      return 'http://localhost:3001/api';
     }
   }
 

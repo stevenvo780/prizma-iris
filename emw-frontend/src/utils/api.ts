@@ -8,8 +8,8 @@ const getApiUrl = (): string => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
 
-    if (hostname.includes('run.app') || hostname.includes('emw-frontend')) {
-      return 'https://emw-backend-6dalnsowyq-uc.a.run.app/api';
+    if (hostname.includes('run.app') || hostname.includes('iris-frontend')) {
+      return 'https://prizma-iris-kjopuery2a-uc.a.run.app/api';
     }
   }
 

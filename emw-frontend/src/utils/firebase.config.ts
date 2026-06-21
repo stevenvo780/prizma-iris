@@ -1,17 +1,25 @@
+/**
+ * Obtener URL de API del backend desde variables de entorno
+ * Centralizado para evitar hardcodeos en múltiples archivos
+ */
 const getApiUrl = (): string => {
+  // Preferir variable de entorno (configurable por entorno)
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
   }
 
+  // Fallback a localhost solo en desarrollo
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-
-    // Detectar entornos de producción (Cloud Run o dominio personalizado)
-    if (hostname.includes('run.app') || hostname.includes('emw-frontend') || hostname.includes('humanizar.cloud')) {
-      return 'https://emw-backend-6dalnsowyq-uc.a.run.app/api';
+    // Si estamos en producción (run.app, iris-frontend, prizma.cloud), exigir NEXT_PUBLIC_API_URL
+    if (hostname.includes('run.app') || hostname.includes('iris-frontend') || hostname.includes('prizma.cloud')) {
+      console.error('ERROR: NEXT_PUBLIC_API_URL no está configurado. Por favor, configurar en variables de entorno.');
+      // Retornar fallback temporal, pero esto debería fallar en producción
+      return 'http://localhost:3001/api';
     }
   }
 
+  // Localhost solo en dev local
   return 'http://localhost:3001/api';
 };
 
@@ -43,7 +51,7 @@ getAuthMode();
 
 const getStoredTokenLocal = () => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('emw_token');
+    return localStorage.getItem('iris_token');
   }
   return null;
 };
@@ -78,7 +86,7 @@ export const auth = {
 
       if (response.ok && data.token) {
         if (typeof window !== 'undefined') {
-          localStorage.setItem('emw_token', data.token);
+          localStorage.setItem('iris_token', data.token);
         }
         return {
           user: {
@@ -161,7 +169,7 @@ export const auth = {
   },
   signOut: async () => {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('emw_token');
+      localStorage.removeItem('iris_token');
     }
   },
 };
@@ -252,7 +260,7 @@ export const database = {
 
 export const getStoredToken = () => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('emw_token');
+    return localStorage.getItem('iris_token');
   }
   return null;
 };

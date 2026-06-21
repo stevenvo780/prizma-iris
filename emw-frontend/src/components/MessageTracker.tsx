@@ -56,13 +56,13 @@ const MessageTracker: React.FC<MessageTrackerProps> = ({
         dateFrom: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       });
 
-      const allMessages = response.data?.messages || [];
+      const allMessages = Array.isArray(response.data) ? response.data : [];
 
-      let filteredMessages = allMessages;
+      let filteredMessages: MessageLog[] = allMessages as any;
       if (messageIds.length > 0) {
-        filteredMessages = allMessages.filter((msg: MessageLog) =>
-          messageIds.includes(msg.id)
-        );
+        filteredMessages = allMessages.filter((msg: any) =>
+          msg.id && messageIds.includes(msg.id)
+        ) as any;
       }
 
       setMessages(filteredMessages);
@@ -154,6 +154,7 @@ const MessageTracker: React.FC<MessageTrackerProps> = ({
       [MessageStatus.DELIVERED]: { variant: 'success', icon: <FaCheckCircle /> },
       [MessageStatus.READ]: { variant: 'success', icon: <FaCheckCircle /> },
       [MessageStatus.FAILED]: { variant: 'danger', icon: <FaTimesCircle /> },
+      [MessageStatus.RETRYING]: { variant: 'warning', icon: <FaClock /> },
       [MessageStatus.CANCELLED]: { variant: 'dark', icon: <FaTimesCircle /> },
     };
 

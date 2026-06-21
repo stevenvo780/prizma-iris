@@ -51,8 +51,7 @@ const Landing = () => {
   const [showProviderModal, setShowProviderModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
-  const [useFirebaseAuth] = useState(false);
-  const { loginWithEmail, loginWithProvider, loginWithBackend, resetPassword, autoLoginForDev } = useUser();
+  const { loginWithProvider, loginWithBackend, resetPassword, autoLoginForDev } = useUser();
   const { addAlert } = useUI();
 
   const handleSubmit = async (event: FormEvent) => {
@@ -62,11 +61,7 @@ const Landing = () => {
       return;
     }
     setIsLoading(true);
-    if (useFirebaseAuth) {
-      await loginWithEmail(email, password);
-    } else {
-      await loginWithBackend(email, password);
-    }
+    await loginWithBackend(email, password);
     setIsLoading(false);
   };
 
@@ -234,14 +229,13 @@ const Landing = () => {
         <div className="container">
           <div className="row text-center">
             {[
-              { num: '10K+', label: 'Mensajes enviados' },
-              { num: '99.9%', label: 'Uptime garantizado' },
-              { num: '24/7', label: 'Soporte técnico' },
-              { num: '< 1s', label: 'Tiempo de entrega' },
+              { label: '✓ Mensajería a escala global' },
+              { label: '✓ Entrega confiable y rápida' },
+              { label: '✓ Soporte profesional 24/7' },
+              { label: '✓ Plataforma escalable y segura' },
             ].map((s, i) => (
               <div className="col-6 col-md-3 mb-3 mb-md-0" key={i}>
-                <h2 style={{ fontWeight: 800, color: '#0a827f', fontSize: '2rem', marginBottom: 4 }}>{s.num}</h2>
-                <p style={{ color: '#888', margin: 0, fontSize: '0.95rem' }}>{s.label}</p>
+                <p style={{ color: '#0a827f', margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -410,7 +404,7 @@ const Landing = () => {
             © {new Date().getFullYear()} Iris — Enterprise WhatsApp Messaging by{' '}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/img/prizma-symbol.svg" alt="" width={18} height={18} style={{ borderRadius: 4 }} />
-            <a href="https://prisma-enterprice.cloud" target="_blank" rel="noopener noreferrer" style={{ color: '#0a827f' }}>Steven Vallejo</a>
+            <a href="https://prisma-enterprise.cloud" target="_blank" rel="noopener noreferrer" style={{ color: '#0a827f' }}>Steven Vallejo</a>
           </p>
         </div>
       </footer>

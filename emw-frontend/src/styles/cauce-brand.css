@@ -1,16 +1,16 @@
 /**
- * cauce-brand.css — maps the existing EMW visual framework (Bootstrap 5 +
- * react-bootstrap) onto Olympo design-system tokens for the "emw" module.
+ * prizma-brand.css — maps the existing IRIS visual framework (Bootstrap 5 +
+ * react-bootstrap) onto Prizma design-system tokens for the "iris" module.
  *
  * Loaded once, after Bootstrap and globals.css, from pages/_app.tsx.
- * Token source: @olympo/ui/styles.css (bundles @olympo/tokens olympo.css).
- * The emw module accent (--c-accent-module) resolves to #1FB85C via the
- * data-module="emw" attribute set on the app root container.
+ * Token source: prizma-ui/styles.css (bundles @prizma/tokens prizma.css).
+ * The iris module accent (--c-accent-module) resolves to #1FB85C via the
+ * data-module="iris" attribute set on the app root container.
  *
  * Additive only: no selectors are removed; this just retints the framework.
  */
 
-/* --- Bootstrap CSS variables -> Olympo tokens --- */
+/* --- Bootstrap CSS variables -> Prizma tokens --- */
 :root {
   --bs-primary: var(--c-accent-module);
   --bs-primary-rgb: 31, 184, 92; /* #1FB85C, used by Bootstrap rgba() utilities */

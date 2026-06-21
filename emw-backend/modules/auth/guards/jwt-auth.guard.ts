@@ -11,7 +11,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const request = context.switchToHttp().getRequest();
       request.user = {
         id: 'dev-user-123',
-        email: 'dev@test.emw',
+        email: 'dev@test.iris',
         firstName: 'Development',
         lastName: 'User',
         role: 'admin',

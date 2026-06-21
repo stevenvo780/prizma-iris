@@ -59,7 +59,7 @@ export class WhatsappWebhookService {
       process.env.WHATSAPP_VERIFY_TOKEN ||
       process.env.WEBHOOK_VERIFY_TOKEN ||
       process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN ||
-      'emw_webhook_verify_token';
+      'iris_webhook_verify_token';
 
     return !!token && token === expected;
   }
@@ -70,14 +70,21 @@ export class WhatsappWebhookService {
    * Estrategia:
    * 1. Intenta extraer el businessAccountId del body para buscar el appSecret en DB
    * 2. Si no encuentra cuenta, usa el appSecret de env como fallback
-   * 3. Valida la firma HMAC-SHA256
+   * 3. Valida la firma HMAC-SHA256 con comparación time-safe
+   *
+   * Devuelve un resultado discriminado para que el controlador distinga entre
+   * "no hay secreto configurado" (no se puede validar) y "firma inválida"
+   * (rechazar). Antes ambos casos colapsaban en `true`, lo que dejaba el
+   * webhook fail-open ante firmas falsas.
+   *
+   *   - { status: 'valid' }       → firma correcta
+   *   - { status: 'invalid' }     → hay secreto pero la firma NO coincide → 403
+   *   - { status: 'no-secret' }   → no hay secreto configurado → no se valida
    */
-  async validateSignature(rawBody: string, signature?: string): Promise<boolean> {
-    if (!signature) {
-      this.logger.warn('⚠️ Missing signature header');
-      return false;
-    }
-
+  async validateSignature(
+    rawBody: string,
+    signature?: string,
+  ): Promise<{ status: 'valid' | 'invalid' | 'no-secret' }> {
     // Intentar obtener appSecret de la DB basado en el businessAccountId del payload
     let appSecret: string | null = null;
 
@@ -110,9 +117,15 @@ export class WhatsappWebhookService {
 
     if (!appSecret) {
       // Según Meta docs: "You don't have to validate the payload, but you should."
-      // Si no hay appSecret, permitimos el webhook con advertencia
-      this.logger.warn('⚠️ No app secret found in DB or env - skipping signature validation (optional per Meta docs)');
-      return true;
+      // Si no hay appSecret, no podemos validar; lo señalamos como tal.
+      this.logger.warn('⚠️ No app secret found in DB or env - cannot validate signature (optional per Meta docs)');
+      return { status: 'no-secret' };
+    }
+
+    // Hay secreto: a partir de aquí una firma ausente o que no coincide es inválida.
+    if (!signature) {
+      this.logger.warn('⚠️ Missing signature header but app secret is configured');
+      return { status: 'invalid' };
     }
 
     const expected =
@@ -121,7 +134,8 @@ export class WhatsappWebhookService {
     const a = Buffer.from(signature);
     const b = Buffer.from(expected);
 
-    return a.length === b.length && crypto.timingSafeEqual(a, b);
+    const matches = a.length === b.length && crypto.timingSafeEqual(a, b);
+    return { status: matches ? 'valid' : 'invalid' };
   }
 
   /**
@@ -138,6 +152,8 @@ export class WhatsappWebhookService {
       method?: string;
       value?: string;
       source?: string;
+      /** Dueño/tenant resuelto desde el phone_number_id que recibió el mensaje. */
+      ownerUserId?: string;
     },
   ): Promise<void> {
 
@@ -156,7 +172,13 @@ export class WhatsappWebhookService {
       `✅ Consentimiento: ${normalizedPhone} aceptó. Marcando opt-in y drenando cola...`,
     );
 
-    const customer = await this.customersService.markOptIn(normalizedPhone, optInAt);
+    // Pasamos el ownerUserId para que markOptIn quede acotado al tenant correcto
+    // (cierre de fuga cross-tenant) y, si el cliente no existe, se cree bajo ese dueño.
+    const customer = await this.customersService.markOptIn(
+      normalizedPhone,
+      optInAt,
+      details?.ownerUserId,
+    );
     if (!customer) {
       this.logger.warn(
         `⚠️ recordConsentDecision: no encontré Customer con número ${normalizedPhone}, no puedo drenar cola.`,
@@ -347,6 +369,12 @@ export class WhatsappWebhookService {
             `📩 Consent detectado: from=${waId} consent=${consent} method=${method} value="${consentValue}"`,
           );
 
+          // Resolver el dueño (tenant) a partir del phone_number_id que recibió
+          // el mensaje, para que el opt-in se asocie al userId correcto y no a un
+          // tenant arbitrario que comparta el número del cliente.
+          const ownerUserId =
+            (await this.resolveUserIdFromPhoneNumberId(phoneNumberId)) ?? undefined;
+
           let optInProcessed = false;
           try {
             await this.recordConsentDecision(waId, consent, {
@@ -355,6 +383,7 @@ export class WhatsappWebhookService {
               method,
               value: consentValue,
               source: 'whatsapp',
+              ownerUserId,
             });
             // Si fue consent positivo, la cola ya se drenó y el mensaje ya se envió
             optInProcessed = consent;

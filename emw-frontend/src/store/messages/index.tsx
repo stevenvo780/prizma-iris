@@ -28,10 +28,10 @@ const useMessages = () => {
         throw new Error('No se recibieron datos del servidor');
       }
 
-      const messages = response.data.messages || response.data;
-      if (!Array.isArray(messages)) {
-        console.error('Formato de respuesta inesperado:', response.data);
-        throw new Error('El servidor retornó un formato de datos inválido');
+      const messages = Array.isArray(response.data) ? response.data : [];
+      if (messages.length === 0) {
+        console.warn('No se encontraron mensajes');
+        // No lanzar error, solo retornar array vacío
       }
 
       messageActions.setMessages(dispatch, messages);

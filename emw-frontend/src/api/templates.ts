@@ -11,7 +11,7 @@ export const createTemplateAPI = (template: Templates): Promise<AxiosResponse<Te
 };
 
 export const updateTemplateAPI = (
-  id: string,
+  id: string | number,
   template: {
     active: boolean;
   },
@@ -19,7 +19,7 @@ export const updateTemplateAPI = (
   return axios.patch(`/templates/${id}`, template);
 };
 
-export const deleteTemplateAPI = (id: string): Promise<AxiosResponse<void>> => {
+export const deleteTemplateAPI = (id: string | number): Promise<AxiosResponse<void>> => {
   return axios.delete(`/templates/${id}`);
 };
 

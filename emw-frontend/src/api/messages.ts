@@ -3,8 +3,14 @@ import whatsappService from '@utils/whatsapp-axios';
 import { AxiosResponse } from 'axios';
 import { WppMS } from '@utils/types';
 
-export const getMessagesAPI = (): Promise<AxiosResponse<WppMS[]>> => {
-  return axios.get('/messages').then(response => {
+export const getMessagesAPI = (params?: {
+  page?: number;
+  limit?: number;
+  dateFrom?: string;
+  dateTo?: string;
+  search?: string;
+}): Promise<AxiosResponse<WppMS[]>> => {
+  return axios.get('/messages', { params }).then(response => {
     const adaptedMessages = response.data.map((template: any) => ({
       id: template.id,
       content: template.content || '',
@@ -70,10 +76,28 @@ export const updateMessageAPI = (
 ): Promise<AxiosResponse<WppMS>> => {
   return axios.put(`/messages/${id}`, message).then(response => {
     const t = response.data;
+
+    // Normalizar mediaAttachments a un formato consistente (string o null)
+    let normalizedAttachments: string | null = null;
+    if (t.mediaAttachments) {
+      if (typeof t.mediaAttachments === 'string') {
+        normalizedAttachments = t.mediaAttachments;
+      } else if (Array.isArray(t.mediaAttachments) && t.mediaAttachments.length > 0) {
+        // Si es array, tomar el primer elemento como string (asumiendo estructura inconsistente del backend)
+        normalizedAttachments = JSON.stringify(t.mediaAttachments);
+      }
+    } else if (t.file && typeof t.file === 'string') {
+      normalizedAttachments = t.file;
+    }
+
+    if (!normalizedAttachments && (t.mediaAttachments === null || t.file === null)) {
+      normalizedAttachments = null;
+    }
+
     const adapted: WppMS = {
       id: t.id,
       content: t.content || t.message || '',
-      mediaAttachments: t.mediaAttachments || t.file || null,
+      mediaAttachments: normalizedAttachments,
       mediaType: t.mediaType || null,
       messageType: t.messageType || 'text',
       active: t.active,
@@ -85,8 +109,16 @@ export const updateMessageAPI = (
   });
 };
 
-export const deleteMessageAPI = (id: number): Promise<AxiosResponse<void>> => {
+export const deleteMessageAPI = (id: string | number): Promise<AxiosResponse<void>> => {
   return axios.delete(`/messages/${id}`);
+};
+
+export const retryMessageAPI = (id: string): Promise<AxiosResponse<any>> => {
+  return axios.post(`/messages/${id}/retry`);
+};
+
+export const cancelMessageAPI = (id: string): Promise<AxiosResponse<any>> => {
+  return axios.post(`/messages/${id}/cancel`);
 };
 
 export const reorderMessagesAPI = (
@@ -136,7 +168,7 @@ export const deleteWhatsAppTemplateAPI = (
   return whatsappService.delete(`/whatsapp/templates/${accountId}/${templateName}`);
 };
 
-export const getMessageStatsAPI = (params: {
+export const getMessageStatsAPI = (params?: {
   dateFrom?: string;
   dateTo?: string;
 }): Promise<AxiosResponse<any>> => {

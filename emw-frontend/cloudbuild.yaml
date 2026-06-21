@@ -4,11 +4,11 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/emergent-enterprises/emw-frontend:latest'
+      - 'gcr.io/emergent-enterprises/iris-frontend:latest'
       - '-f'
       - 'Dockerfile'
       - '--build-arg'
-      - 'NEXT_PUBLIC_API_URL=https://emw-backend-633619052458.us-central1.run.app/api'
+      - 'NEXT_PUBLIC_API_URL=https://iris-backend-633619052458.us-central1.run.app/api'
       - '.'
     dir: '.'
 
@@ -16,7 +16,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/emergent-enterprises/emw-frontend:latest'
+      - 'gcr.io/emergent-enterprises/iris-frontend:latest'
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -24,8 +24,8 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'emw-frontend'
-      - '--image=gcr.io/emergent-enterprises/emw-frontend:latest'
+      - 'iris-frontend'
+      - '--image=gcr.io/emergent-enterprises/iris-frontend:latest'
       - '--region=us-central1'
       - '--platform=managed'
       - '--allow-unauthenticated'
@@ -35,10 +35,10 @@ steps:
       - '--timeout=60'
       - '--min-instances=0'
       - '--max-instances=10'
-      - '--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://emw-backend-633619052458.us-central1.run.app/api'
+      - '--set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://iris-backend-633619052458.us-central1.run.app/api'
 
 images:
-  - 'gcr.io/emergent-enterprises/emw-frontend:latest'
+  - 'gcr.io/emergent-enterprises/iris-frontend:latest'
 
 options:
   machineType: 'E2_MEDIUM'

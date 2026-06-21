@@ -62,7 +62,7 @@ const MessageModal: FC<MessageModalProps> = ({
     if (show && (!initializedRef.current || messageIdChanged)) {
       initializedRef.current = true;
       lastMessageIdRef.current = currentMessage.id;
-      
+
       const defaultData = {
         content: '',
         mediaAttachments: null,
@@ -76,10 +76,10 @@ const MessageModal: FC<MessageModalProps> = ({
       });
 
       // mediaAttachments puede ser un array de objetos [{type, url, caption}] o una string URL (legacy)
-      const mediaUrl = Array.isArray(currentMessage.mediaAttachments) 
-        ? currentMessage.mediaAttachments[0]?.url 
+      const mediaUrl = Array.isArray(currentMessage.mediaAttachments)
+        ? currentMessage.mediaAttachments[0]?.url
         : currentMessage.mediaAttachments;
-      
+
       if (mediaUrl && typeof mediaUrl === 'string') {
         const fileType = getFileType(mediaUrl);
         setLocalImageUrl(mediaUrl);

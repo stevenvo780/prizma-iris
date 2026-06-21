@@ -16,7 +16,8 @@ import { OptInModule } from './modules/opt-in/opt-in.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { ChatModule } from './modules/chat/chat.module';
-import { OlympoModule } from './modules/cauce/cauce.module';
+import { PrizmaModule } from './modules/prizma/prizma.module';
+import { NotificationAPIModule } from './modules/NotificationAPI';
 import { DatabaseConfig } from './config/database.config';
 import { Controller, Get } from '@nestjs/common';
 
@@ -24,7 +25,7 @@ import { Controller, Get } from '@nestjs/common';
 class HealthController {
   @Get()
   check() {
-    return { status: 'healthy', service: 'emw' };
+    return { status: 'healthy', service: 'iris' };
   }
 }
 
@@ -52,7 +53,8 @@ class HealthController {
     PaymentsModule,
     SharedModule,
     ChatModule,
-    OlympoModule,
+    PrizmaModule,
+    NotificationAPIModule,
   ],
   controllers: [HealthController],
   providers: [],

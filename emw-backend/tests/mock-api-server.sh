@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Mock API Server - Simulates EMW API responses for testing
+# Mock API Server - Simulates IRIS API responses for testing
 # Works with netcat or socat to provide HTTP responses
 
 set -e
@@ -45,11 +45,11 @@ EOF
 <!DOCTYPE html>
 <html>
 <head>
-    <title>EMW API Documentation</title>
+    <title>IRIS API Documentation</title>
 </head>
 <body>
-    <h1>EMW Unified API Documentation</h1>
-    <p>Swagger/OpenAPI documentation for EMW API</p>
+    <h1>IRIS Unified API Documentation</h1>
+    <p>Swagger/OpenAPI documentation for IRIS API</p>
     <div>Mock API Documentation</div>
 </body>
 </html>
@@ -59,7 +59,7 @@ EOF
     cat > "$MOCK_DATA_DIR/version.json" << 'EOF'
 {
   "version": "1.0.0",
-  "name": "emw-unified-api",
+  "name": "iris-unified-api",
   "environment": "development",
   "build": "mock-build"
 }
@@ -227,7 +227,7 @@ cleanup() {
 
 trap cleanup SIGINT SIGTERM
 
-echo "🚀 EMW Mock API Server"
+echo "🚀 IRIS Mock API Server"
 echo "======================"
 echo "Starting mock API server on port $API_PORT"
 echo "Press Ctrl+C to stop"
@@ -238,7 +238,7 @@ if [ "$1" = "--background" ]; then
     main &
     MOCK_PID=$!
     echo "Mock API server started in background (PID: $MOCK_PID)"
-    echo "$MOCK_PID" > "/tmp/emw-mock-api.pid"
+    echo "$MOCK_PID" > "/tmp/iris-mock-api.pid"
 else
     main
 fi

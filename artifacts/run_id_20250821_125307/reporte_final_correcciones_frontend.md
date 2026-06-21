@@ -1,4 +1,4 @@
-# Reporte Final: Correcciones Frontend EMW
+# Reporte Final: Correcciones Frontend IRIS
 
 ## ✅ PROBLEMAS CORREGIDOS EXITOSAMENTE
 
@@ -98,7 +98,7 @@ Logs: ✅ Sin errores críticos
 ### 🚀 **Listo para Continuar**
 - **Próximo paso**: Testing UI del Caso de Uso 1
 - **Herramientas**: Navegador totalmente funcional
-- **Credenciales**: `admin@test.emw` / `testPassword123`
+- **Credenciales**: `admin@test.iris` / `testPassword123`
 - **Ambiente**: Docker environment estable
 
 ---

@@ -1,29 +1,29 @@
-# 📱 EMW Backend API
+# 📱 IRIS Backend API
 
 ## Enhanced Marketing WhatsApp - Backend Service
 
 <div align="center">
 
-![EMW Logo](https://img.shields.io/badge/EMW-Backend-blue?style=for-the-badge&logo=whatsapp)
+![IRIS Logo](https://img.shields.io/badge/IRIS-Backend-blue?style=for-the-badge&logo=whatsapp)
 ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
 **Plataforma unificada de marketing automation para WhatsApp Business**  
-_Parte del Ecosistema Humanizar_
+_Parte del Ecosistema Prizma_
 
 </div>
 
 ## 🌟 Descripción General
 
-EMW Backend es el núcleo del sistema de marketing automation de WhatsApp del **Ecosistema Humanizar**. Esta API robusta y escalable consolida las funcionalidades de emw-api y wpp-api-oficial en una sola aplicación NestJS moderna, proporcionando una solución completa para la gestión de campañas de marketing a través de WhatsApp Business.
+IRIS Backend es el núcleo del sistema de marketing automation de WhatsApp del **Ecosistema Prizma**. Esta API robusta y escalable consolida las funcionalidades de iris-api y wpp-api-oficial en una sola aplicación NestJS moderna, proporcionando una solución completa para la gestión de campañas de marketing a través de WhatsApp Business.
 
 ### 🎯 Propósito en el Ecosistema
 
 - **Centro de comunicación**: Gestiona todas las comunicaciones WhatsApp del ecosistema
-- **Integración con Graf**: Envía notificaciones de pedidos y promociones
-- **Soporte a MeraVuelta**: Notificaciones de entregas y estados
+- **Integración con Hermes**: Envía notificaciones de pedidos y promociones
+- **Soporte a Talaria**: Notificaciones de entregas y estados
 - **Marketing automation**: Campañas personalizadas y segmentadas
 
 ## ✨ Características Principales
@@ -59,8 +59,8 @@ EMW Backend es el núcleo del sistema de marketing automation de WhatsApp del **
 
 ### 🔗 Integraciones del Ecosistema
 
-- **Graf Integration**: Notificaciones de pedidos
-- **MeraVuelta Integration**: Updates de entregas
+- **Hermes Integration**: Notificaciones de pedidos
+- **Talaria Integration**: Updates de entregas
 - **Firebase Integration**: Autenticación y notificaciones
 - **Webhook support**: Para servicios externos
 
@@ -83,7 +83,7 @@ EMW Backend es el núcleo del sistema de marketing automation de WhatsApp del **
 ### Módulos Principales
 
 ```
-📦 EMW Backend
+📦 IRIS Backend
 ├── 🔐 Auth Module          # Autenticación y autorización
 ├── 📱 WhatsApp Module      # Integración WhatsApp Business API
 ├── 📨 Messages Module      # Gestión de mensajes
@@ -98,7 +98,7 @@ EMW Backend es el núcleo del sistema de marketing automation de WhatsApp del **
 ### Estructura Detallada del Proyecto
 
 ```
-📁 emw-backend/
+📁 iris-backend/
 ├── 📄 app.module.ts              # Módulo principal de la aplicación
 ├── 📄 index.ts                   # Punto de entrada principal
 ├── 📁 config/                    # Archivos de configuración
@@ -170,9 +170,9 @@ nano .env
 # Base de Datos
 DB_HOST=localhost
 DB_PORT=3306
-DB_USERNAME=emw_user
+DB_USERNAME=irisuser
 DB_PASSWORD=your_secure_password
-DB_NAME=emw_database
+DB_NAME=iris
 
 # Redis
 REDIS_HOST=localhost
@@ -202,9 +202,9 @@ RATE_LIMIT_WEBHOOK_PER_MINUTE=1000
 
 ```bash
 # Crear base de datos MySQL
-mysql -u root -p -e "CREATE DATABASE emw_database;"
-mysql -u root -p -e "CREATE USER 'emw_user'@'localhost' IDENTIFIED BY 'your_secure_password';"
-mysql -u root -p -e "GRANT ALL PRIVILEGES ON emw_database.* TO 'emw_user'@'localhost';"
+mysql -u root -p -e "CREATE DATABASE iris;"
+mysql -u root -p -e "CREATE USER 'irisuser'@'localhost' IDENTIFIED BY 'your_secure_password';"
+mysql -u root -p -e "GRANT ALL PRIVILEGES ON iris.* TO 'irisuser'@'localhost';"
 mysql -u root -p -e "FLUSH PRIVILEGES;"
 ```
 
@@ -237,13 +237,13 @@ npm start
 
 ```bash
 # Construir imagen
-docker build -t emw-backend .
+docker build -t iris-backend .
 
 # Ejecutar con docker-compose
 docker-compose up -d
 
 # Ver logs
-docker-compose logs -f emw-backend
+docker-compose logs -f iris-backend
 ```
 
 ## 🧪 Testing
@@ -387,25 +387,25 @@ El sistema soporta múltiples modos de autenticación:
 }
 ```
 
-### Integración con Ecosistema Humanizar
+### Integración con Ecosistema Prizma
 
 ```bash
 # Variables de integración
-GRAF_API_URL=http://localhost:3001       # API de Graf
-MERAVUELTA_API_URL=http://localhost:3002 # API de MeraVuelta
+HERMES_API_URL=http://localhost:3001       # API de Hermes
+TALARIA_API_URL=http://localhost:3002 # API de Talaria
 ECOSYSTEM_API_KEY=your_ecosystem_key     # API Key compartida
 ```
 
 ## 🔗 Integraciones
 
-### Graf E-commerce
+### Hermes E-commerce
 
 - Notificaciones de pedidos nuevos
 - Confirmaciones de pago
 - Updates de estado de pedidos
 - Promociones y ofertas
 
-### MeraVuelta Entregas
+### Talaria Entregas
 
 - Notificaciones de asignación de pedidos
 - Updates de estado de entrega
@@ -426,7 +426,7 @@ ECOSYSTEM_API_KEY=your_ecosystem_key     # API Key compartida
 npm run logs
 
 # Logs de producción con Docker
-docker-compose logs -f emw-backend
+docker-compose logs -f iris-backend
 ```
 
 ### Métricas de Performance
@@ -495,17 +495,17 @@ source .env.production
 
 ### Documentación Adicional
 
-- [Ecosistema Humanizar](../../README.md)
-- [EMW Frontend](../emw-frontend/README.md)
+- [Ecosistema Prizma](../../README.md)
+- [IRIS Frontend](../iris-frontend/README.md)
 - [API Documentation](https://your-domain.com/api/docs)
 
 ---
 
 <div align="center">
 
-**EMW Backend API v2.0.0**  
-_Parte del Ecosistema Humanizar_
+**IRIS Backend API v2.0.0**  
+_Parte del Ecosistema Prizma_
 
-![Humanizar](https://img.shields.io/badge/Humanizar-Ecosystem-orange?style=for-the-badge)
+![Prizma](https://img.shields.io/badge/Prizma-Ecosystem-orange?style=for-the-badge)
 
 </div>

@@ -17,7 +17,7 @@ if [ -z "$AUTH_TOKEN" ]; then
 fi
 
 # Temporary files
-TEMP_DIR="/tmp/emw-whatsapp-account-test"
+TEMP_DIR="/tmp/iris-whatsapp-account-test"
 mkdir -p "$TEMP_DIR"
 
 # Cleanup function

@@ -1,4 +1,4 @@
-# 🎉 PRIMERA PRUEBA EXITOSA - Login Frontend EMW
+# 🎉 PRIMERA PRUEBA EXITOSA - Login Frontend IRIS
 
 ## Fecha: 21 de agosto de 2025
 ## Run ID: run_id_20250821_131307
@@ -14,13 +14,13 @@ Después de corregir los problemas del frontend, **finalmente logré hacer la pr
 ## 🎯 **Lo que FUNCIONÓ**
 
 ### ✅ **1. Login Exitoso con Backend Auth**
-- **Email**: `admin@test.emw`
+- **Email**: `admin@test.iris`
 - **Password**: `testPassword123`
 - **Modo**: Backend Auth (JWT) ✅
 - **Resultado**: Login exitoso, redirección automática a `/customers`
 
 ### ✅ **2. Usuario Autenticado Visible**
-- **Nombre mostrado**: "EMW - Admin Test"
+- **Nombre mostrado**: "IRIS - Admin Test"
 - **Estado**: Completamente autenticado
 - **Token**: JWT válido generado y utilizado
 
@@ -50,7 +50,7 @@ DESPUÉS: NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```bash
 # Registro exitoso via API
 curl -X POST http://localhost:3001/api/auth/register \
-  -d '{"firstName":"Admin","lastName":"Test","email":"admin@test.emw","password":"testPassword123"}'
+  -d '{"firstName":"Admin","lastName":"Test","email":"admin@test.iris","password":"testPassword123"}'
 ```
 **Resultado**: Usuario válido disponible para login
 
@@ -71,7 +71,7 @@ curl -X POST http://localhost:3001/api/auth/register \
 ### 🖼️ **Captura de Pantalla**
 - **Archivo**: `login-exitoso-primera-prueba.png`
 - **Contenido**: 
-  - Usuario "EMW - Admin Test" autenticado
+  - Usuario "IRIS - Admin Test" autenticado
   - Página `/customers` completamente cargada
   - Navegación funcional
   - Botones de acción disponibles
@@ -127,4 +127,4 @@ curl -X POST http://localhost:3001/api/auth/register \
 
 ---
 
-**🚀 Frontend EMW totalmente operativo - Primera prueba exitosa completada con éxito.**
+**🚀 Frontend IRIS totalmente operativo - Primera prueba exitosa completada con éxito.**

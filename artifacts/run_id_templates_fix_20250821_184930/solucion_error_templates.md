@@ -1,7 +1,7 @@
 # 🔧 Solución Implementada: Error al Cargar Templates
 
 ## 📋 **Resumen del Problema**
-El frontend de EMW estaba fallando al cargar templates debido a una discrepancia entre:
+El frontend de IRIS estaba fallando al cargar templates debido a una discrepancia entre:
 - **Frontend**: Esperaba un campo `active: boolean` en los templates
 - **Backend**: No incluía el campo `active` en el modelo de base de datos ni en las APIs
 
@@ -21,19 +21,19 @@ El frontend de EMW estaba fallando al cargar templates debido a una discrepancia
 - ✅ Permitido modificar campo `active` en templates aprobados
 
 ### 3. **Base de Datos**
-- ✅ Script de migración ejecutado: `/emw-backend/migrations/add-active-field-to-templates.sql`
+- ✅ Script de migración ejecutado: `/iris-backend/migrations/add-active-field-to-templates.sql`
 - ✅ Campo agregado exitosamente: `active tinyint(1) NOT NULL DEFAULT 1`
 - ✅ Templates existentes actualizados según su status
 
 ## 🎯 **Cambios Específicos Implementados**
 
-### `/emw-backend/models/template.entity.ts`
+### `/iris-backend/models/template.entity.ts`
 ```typescript
 @Column({ type: 'boolean', default: true })
 active: boolean;
 ```
 
-### `/emw-backend/modules/templates/templates.service.ts`
+### `/iris-backend/modules/templates/templates.service.ts`
 ```typescript
 // Agregar active al CreateTemplateDto
 export interface CreateTemplateDto {
@@ -51,7 +51,7 @@ if (updateTemplateDto.hasOwnProperty('active')) {
 }
 ```
 
-### `/emw-backend/init-clean.sql`
+### `/iris-backend/init-clean.sql`
 ```sql
 active boolean NOT NULL DEFAULT TRUE,
 ```

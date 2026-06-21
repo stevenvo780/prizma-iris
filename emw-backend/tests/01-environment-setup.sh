@@ -120,7 +120,7 @@ files_to_check=(
     "$API_ROOT/tsconfig.json" 
     "$API_ROOT/app.module.ts"
     "$API_ROOT/index.ts"
-    "$PROJECT_ROOT/docs/flujo_emw.md"
+    "$PROJECT_ROOT/docs/flujo_iris.md"
 )
 
 for file in "${files_to_check[@]}"; do

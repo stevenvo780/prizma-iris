@@ -1,0 +1,87 @@
+/**
+ * prizma-brand.css — maps the Iris visual framework (Bootstrap 5 +
+ * react-bootstrap) onto Prizma design-system tokens for the "iris" module.
+ *
+ * Loaded once, after Bootstrap and globals.css, from pages/_app.tsx.
+ * Token source: prizma-ui/styles.css (bundles prizma-tokens prizma.css).
+ * The iris module accent (--c-accent-module) resolves to #1FB85C via the
+ * data-module="iris" attribute set on the app root container.
+ *
+ * Additive only: no selectors are removed; this just retints the framework.
+ */
+
+/* --- Bootstrap CSS variables -> Prizma tokens --- */
+:root {
+  --bs-primary: var(--c-accent-module);
+  --bs-primary-rgb: 31, 184, 92; /* #1FB85C, used by Bootstrap rgba() utilities */
+  --bs-link-color: var(--c-primary);
+  --bs-link-hover-color: var(--c-primary-700);
+  --bs-body-font-family: var(--c-font-sans);
+  --bs-body-color: var(--c-text);
+  --bs-border-color: var(--c-border);
+}
+
+/* --- Base typography --- */
+body {
+  font-family: var(--c-font-sans);
+  color: var(--c-text);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--c-font-display);
+}
+
+/* --- Links --- */
+a {
+  color: var(--c-primary);
+}
+a:hover {
+  color: var(--c-primary-700);
+}
+
+/* --- Buttons (Bootstrap primary -> module accent) --- */
+.btn-primary {
+  --bs-btn-bg: var(--c-accent-module);
+  --bs-btn-border-color: var(--c-accent-module);
+  --bs-btn-hover-bg: var(--c-accent-module);
+  --bs-btn-hover-border-color: var(--c-accent-module);
+  --bs-btn-active-bg: var(--c-accent-module);
+  --bs-btn-active-border-color: var(--c-accent-module);
+  --bs-btn-disabled-bg: var(--c-accent-module);
+  --bs-btn-disabled-border-color: var(--c-accent-module);
+  background-color: var(--c-accent-module);
+  border-color: var(--c-accent-module);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--c-accent-module);
+  --bs-btn-border-color: var(--c-accent-module);
+  --bs-btn-hover-bg: var(--c-accent-module);
+  --bs-btn-hover-border-color: var(--c-accent-module);
+  --bs-btn-active-bg: var(--c-accent-module);
+  --bs-btn-active-border-color: var(--c-accent-module);
+}
+
+.btn-link {
+  --bs-btn-color: var(--c-primary);
+  --bs-btn-hover-color: var(--c-primary-700);
+}
+
+/* --- Accent text / background utilities --- */
+.text-primary {
+  color: var(--c-accent-module) !important;
+}
+.bg-primary {
+  background-color: var(--c-accent-module) !important;
+}
+.border-primary {
+  border-color: var(--c-accent-module) !important;
+}
+
+/* --- Form controls focus ring --- */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--c-accent-module);
+  box-shadow: 0 0 0 0.2rem var(--c-accent-module-tint);
+}

@@ -1,0 +1,8 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "rm -f package-lock.json && npm install --legacy-peer-deps",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://iris-backend-6dalnsowyq-uc.a.run.app/api"
+  }
+}

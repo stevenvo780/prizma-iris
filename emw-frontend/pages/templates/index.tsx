@@ -159,7 +159,7 @@ const TemplatesPage: FC = () => {
     }
   };
 
-  const handleDeleteTemplate = async (templateId: number) => {
+  const handleDeleteTemplate = async (templateId: string) => {
     try {
       setLoading(true);
       await api.templates.deleteTemplateAPI(templateId);
@@ -209,16 +209,16 @@ const TemplatesPage: FC = () => {
       setLoading(true);
       const response = await api.templates.syncTemplateStatusAPI(template.id!);
       const updatedTemplate = response.data;
-      
+
       if (updatedTemplate.status !== template.status) {
-        addAlert({ 
-          type: 'success', 
-          message: `Estado actualizado: ${template.status} → ${updatedTemplate.status}` 
+        addAlert({
+          type: 'success',
+          message: `Estado actualizado: ${template.status} → ${updatedTemplate.status}`
         });
       } else {
-        addAlert({ 
-          type: 'info', 
-          message: `Estado sin cambios: ${updatedTemplate.status}` 
+        addAlert({
+          type: 'info',
+          message: `Estado sin cambios: ${updatedTemplate.status}`
         });
       }
 
@@ -463,7 +463,7 @@ const TemplatesPage: FC = () => {
         ) : filteredTemplates.length === 0 ? (
           <Col className='text-center' style={{ marginTop: 40, color: '#888' }}>
             <p>
-              No encontramos templates que coincidan con "{searchTerm.trim()}"
+              No encontramos templates que coincidan con &quot;{searchTerm.trim()}&quot;
             </p>
             {searchTerm && (
               <Button variant='link' onClick={() => setSearchTerm('')}>

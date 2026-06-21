@@ -18,12 +18,12 @@ fi
 # Configuration
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-5432}"
-DB_USERNAME="${DB_USERNAME:-postgres}"
+DB_USERNAME="${DB_USERNAME:-prizma}"
 DB_PASSWORD="${DB_PASSWORD:-}"
 DB_DATABASE="${DB_DATABASE:-postgres}"
 
 # Temporary files
-TEMP_DIR="/tmp/emw-db-test"
+TEMP_DIR="/tmp/iris-db-test"
 mkdir -p "$TEMP_DIR"
 
 # Cleanup function

@@ -17,7 +17,7 @@ if [ -z "$AUTH_TOKEN" ]; then
 fi
 
 # Temporary files
-TEMP_DIR="/tmp/emw-error-test"
+TEMP_DIR="/tmp/iris-error-test"
 mkdir -p "$TEMP_DIR"
 
 # Cleanup function

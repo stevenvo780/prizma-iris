@@ -57,6 +57,7 @@ const useCustomer = () => {
           status: customer.status || 'active',
           notes: customer.notes,
           tags: customer.tags || [],
+          tagAssignments: customer.tagAssignments || [],
           companyName: (customer as any).companyName || customer.customFields?.company || '',
           title: (customer as any).title || customer.customFields?.title || '',
           campaign: (customer as any).campaign || customer.customFields?.campaign || '',
@@ -91,6 +92,7 @@ const useCustomer = () => {
           status: customer.status,
           notes: customer.notes,
           tags: customer.tags || [],
+          tagAssignments: customer.tagAssignments || [],
           companyName: (customer as any).companyName || customer.customFields?.company || '',
           title: (customer as any).title || customer.customFields?.title || '',
           campaign: (customer as any).campaign || customer.customFields?.campaign || '',
@@ -99,13 +101,10 @@ const useCustomer = () => {
           data3: (customer as any).data3 || customer.customFields?.data3 || '',
         };
 
-        const response = await api.customers.updateCustomerAPI(id, cleanCustomerData);
+        const response = await api.customers.updateCustomerAPI(id, cleanCustomerData as any);
         customerActions.updateCustomer(dispatch, response.data);
-        // No mostrar alerta aquí - la página que llama se encarga
-
-        setTimeout(() => {
-          fetchCustomers();
-        }, 500);
+        // Refetchar inmediatamente después del éxito, sin setTimeout arbitrary
+        await fetchCustomers();
       } catch (error: any) {
         console.error('Error updating customer:', error);
         throw error;
@@ -262,8 +261,10 @@ const useCustomer = () => {
   const downloadExcel = useCallback(async () => {
     setLoading(true);
     try {
-      // Obtener TODOS los clientes sin paginación para exportar
-      const response = await api.customers.getCustomersAPI(0, 0, '');
+      // Obtener TODOS los clientes para exportar
+      // Usar parámetros explícitos: page=1, limit=-1 (backend interpreta como "sin límite")
+      // O mejor aún: usar un endpoint específico si está disponible en el backend
+      const response = await api.customers.getCustomersAPI(1, -1, '');
       const responseData = response.data as any;
       const allCustomers = Array.isArray(responseData) ? responseData : (responseData.data || customers);
 

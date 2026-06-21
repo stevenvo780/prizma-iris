@@ -244,7 +244,11 @@ export interface Plans {
   sm: string;
 }
 
-export interface MessageLog {
+/**
+ * MessageLogSimple: versión simplificada para logs de API
+ * Diferencia con MessageLog (completo): sin mediaAttachments, errorDetails, timestamps detallados
+ */
+export interface MessageLogSimple {
   id: string;
   recipientNumber: string;
   sent: boolean;
@@ -255,7 +259,7 @@ export interface MessageLog {
 }
 
 export interface MessageLogsResponse {
-  data: MessageLog[];
+  data: MessageLogSimple[];
   total: number;
   limit: number;
   offset: number;

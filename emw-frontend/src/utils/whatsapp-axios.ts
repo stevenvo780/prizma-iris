@@ -1,8 +1,18 @@
 import axios, { AxiosInstance } from 'axios';
 import { getToken } from '@store/helpers';
 
+const getApiBaseUrl = (): string => {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL.replace('/api', '');
+  }
+  if (typeof window !== 'undefined' && window.location.hostname.includes('run.app')) {
+    return 'https://prizma-iris-kjopuery2a-uc.a.run.app';
+  }
+  return 'http://localhost:3001';
+};
+
 const whatsappService: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_WPP_API || 'http://localhost:3000',
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

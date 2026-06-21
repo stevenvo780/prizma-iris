@@ -1,7 +1,7 @@
 {
   "run_id": "run_id_20250821_113128",
-  "project_name": "EMW (Enterprise Messaging for WhatsApp)",
-  "root": "/home/stev/Documentos/repos/humanizar/EMW",
+  "project_name": "IRIS (Enterprise Messaging for WhatsApp)",
+  "root": "/home/stev/Documentos/repos/prizma/IRIS",
   "branch": "dev",
   "commit": "N/A (not a git repository)",
   "languages": ["TypeScript", "JavaScript", "JSON", "YAML", "Markdown"],
@@ -16,7 +16,7 @@
   "version": "2.0.0",
   "key_paths": {
     "backend": {
-      "root": "emw-backend/",
+      "root": "iris-backend/",
       "main": "index.ts",
       "app_module": "app.module.ts",
       "controllers": "controllers/",
@@ -27,7 +27,7 @@
       "tests": "tests/"
     },
     "frontend": {
-      "root": "emw-frontend/",
+      "root": "iris-frontend/",
       "pages": "pages/",
       "components": "src/components/",
       "api": "src/api/",

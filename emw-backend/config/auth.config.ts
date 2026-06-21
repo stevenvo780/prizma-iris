@@ -90,8 +90,8 @@ export class AuthConfig {
       secret: this.jwtSecret,
       signOptions: {
         expiresIn: this.jwtExpiresIn,
-        issuer: 'emw-unified-api',
-        audience: 'emw-clients',
+        issuer: 'iris-unified-api',
+        audience: 'iris-clients',
       },
     };
   }
@@ -101,8 +101,8 @@ export class AuthConfig {
       secret: this.jwtSecret + '-refresh',
       signOptions: {
         expiresIn: this.jwtRefreshExpiresIn,
-        issuer: 'emw-unified-api',
-        audience: 'emw-clients',
+        issuer: 'iris-unified-api',
+        audience: 'iris-clients',
       },
     };
   }

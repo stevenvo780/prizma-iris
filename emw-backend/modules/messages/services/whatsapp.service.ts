@@ -6,7 +6,7 @@ import axios from 'axios';
 import { WhatsAppAccount } from '../../accounts/entities/whatsapp-account.entity';
 import { MessageLog, MessageStatus, MessageType } from '../entities/message-log.entity';
 import { Template, TemplateCategory, TemplateLanguage, TemplateStatus } from '../../templates/entities/template.entity';
-import { OlympoHubService } from '../../cauce/cauce-hub.service';
+import { PrizmaHubService } from '../../prizma/prizma-hub.service';
 
 export interface SendMessageRequest {
   accountId: string;
@@ -60,7 +60,7 @@ export class WhatsAppService {
     private readonly messageLogRepository: Repository<MessageLog>,
     @InjectRepository(Template)
     private readonly templateRepository: Repository<Template>,
-    private readonly cauceHub: OlympoHubService,
+    private readonly prizmaHub: PrizmaHubService,
   ) {
     this.baseUrl = this.configService.get<string>('WHATSAPP_API_BASE_URL') || 'https://graph.facebook.com/v18.0';
   }
@@ -329,9 +329,9 @@ export class WhatsAppService {
           whatsappMessageId: response.id,
         });
 
-        // Olympo: EMW es dueño de MESSAGE_SENT. Publicación NO bloqueante —
+        // Prizma: Iris es dueño de MESSAGE_SENT. Publicación NO bloqueante —
         // el HubClient es tolerante a fallos y nunca lanza hacia este flujo.
-        void this.cauceHub.messageSent({
+        void this.prizmaHub.messageSent({
           messageId: response.id || messageLog.id,
           to: request.recipient,
           status: MessageStatus.SENT,
@@ -388,7 +388,13 @@ export class WhatsAppService {
       },
     );
 
-    return (response as any).data.messages[0];
+    const message = (response as any).data?.messages?.[0];
+    if (!message) {
+      throw new Error(
+        `WhatsApp API did not return a message: ${JSON.stringify((response as any).data)}`,
+      );
+    }
+    return message;
   }
 
   private async sendTemplateMessage(account: WhatsAppAccount, request: SendMessageRequest) {
@@ -437,7 +443,13 @@ export class WhatsAppService {
       },
     );
 
-    return (response as any).data.messages[0];
+    const message = (response as any).data?.messages?.[0];
+    if (!message) {
+      throw new Error(
+        `WhatsApp API did not return a message: ${JSON.stringify((response as any).data)}`,
+      );
+    }
+    return message;
   }
 
   private async sendMediaMessage(account: WhatsAppAccount, request: SendMessageRequest) {
@@ -464,7 +476,13 @@ export class WhatsAppService {
       },
     );
 
-    return (response as any).data.messages[0];
+    const message = (response as any).data?.messages?.[0];
+    if (!message) {
+      throw new Error(
+        `WhatsApp API did not return a message: ${JSON.stringify((response as any).data)}`,
+      );
+    }
+    return message;
   }
 
   private async getAccount(accountId: string, userId: string): Promise<WhatsAppAccount> {

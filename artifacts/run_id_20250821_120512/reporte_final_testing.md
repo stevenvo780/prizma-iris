@@ -1,4 +1,4 @@
-# 🎯 EMW Platform - Reporte de Testing QA
+# 🎯 IRIS Platform - Reporte de Testing QA
 **Run ID**: run_id_20250821_120512  
 **Fecha**: 21 de agosto de 2025  
 **Duración Total**: ~45 minutos  
@@ -32,7 +32,7 @@
 ### 📋 **Pasos Ejecutados**
 
 1. **✅ Registro inicial**
-   - Usuario: `empresa.test@emw.com`
+   - Usuario: `empresa.test@iris.com`
    - ID: `0a316e1b-6628-447a-ba7f-311caa83a4a7`
    - Token JWT generado exitosamente
 
@@ -67,7 +67,7 @@
 ## 🔧 **PROBLEMAS IDENTIFICADOS Y RESUELTOS**
 
 ### ❌ **Problema 1**: Tablas de base de datos faltantes
-- **Error**: `Table 'emw_database.users' doesn't exist`
+- **Error**: `Table 'iris_database.users' doesn't exist`
 - **Causa**: `synchronize: false` y script SQL incompleto
 - **Solución**: Configurar `init-clean.sql` con tablas completas
 - **Status**: ✅ Resuelto
@@ -143,4 +143,4 @@
 
 **✅ SESIÓN DE TESTING COMPLETADA EXITOSAMENTE**
 
-*Plataforma EMW lista para continuar con casos de uso avanzados*
+*Plataforma IRIS lista para continuar con casos de uso avanzados*

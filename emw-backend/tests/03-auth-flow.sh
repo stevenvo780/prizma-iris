@@ -15,7 +15,7 @@ TEST_USER_FIRSTNAME="Test"
 TEST_USER_LASTNAME="User"
 
 # Temporary files for test data
-TEMP_DIR="/tmp/emw-auth-test"
+TEMP_DIR="/tmp/iris-auth-test"
 mkdir -p "$TEMP_DIR"
 
 REGISTER_RESPONSE="$TEMP_DIR/register_response.json"

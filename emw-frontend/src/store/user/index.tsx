@@ -102,26 +102,37 @@ const useUser = () => {
     if (process.env.NEXT_PUBLIC_DEV_AUTO_LOGIN !== 'true') {
       return;
     }
-    console.log('🔧 Auto-login temporal para desarrollo');
+    // Auto-login para dev: requiere DEV_EMAIL y DEV_PASSWORD en variables de entorno
+    const devEmail = process.env.NEXT_PUBLIC_DEV_EMAIL;
+    const devPassword = process.env.NEXT_PUBLIC_DEV_PASSWORD;
 
-    const logged = await loginWithBackend('admin@test.emw', 'admin123', { silent: true });
-    if (logged) {
-      console.log('✅ Auto-login exitoso para desarrollo');
+    if (!devEmail || !devPassword) {
+      console.error(
+        '❌ Auto-login deshabilitado: DEV_EMAIL y DEV_PASSWORD no configuradas en variables de entorno'
+      );
       return;
     }
 
-    console.warn('⚠️ Auto-login falló, intentando registro automático en dev...');
+    console.log('🔧 Auto-login para desarrollo (credenciales desde env)');
+
+    const logged = await loginWithBackend(devEmail, devPassword, { silent: true });
+    if (logged) {
+      console.log('✅ Auto-login exitoso');
+      return;
+    }
+
+    console.warn('⚠️ Auto-login falló, intentando registro automático...');
 
     await registerUser(
       {
-        email: 'admin@test.emw',
-        password: 'admin123',
-        firstName: 'Admin',
-        lastName: 'EMW',
+        email: devEmail,
+        password: devPassword,
+        firstName: 'Dev',
+        lastName: 'User',
       },
       { silent: true },
     );
-    const loggedAfterRegister = await loginWithBackend('admin@test.emw', 'admin123', {
+    const loggedAfterRegister = await loginWithBackend(devEmail, devPassword, {
       silent: true,
     });
     if (loggedAfterRegister) {
@@ -129,24 +140,7 @@ const useUser = () => {
       return;
     }
 
-    const ts = Date.now();
-    const tempEmail = `dev_${ts}@test.emw`;
-    console.warn(`🧪 Creando usuario temporal: ${tempEmail}`);
-    const tempRegistered = await registerUser(
-      {
-        email: tempEmail,
-        password: 'admin123',
-        firstName: 'Dev',
-        lastName: 'Temp',
-      },
-      { silent: true },
-    );
-    if (tempRegistered) {
-      await loginWithBackend(tempEmail, 'admin123', { silent: true });
-      console.log('✅ Usuario temporal creado y autenticado');
-    } else {
-      console.error('❌ No se pudo crear usuario temporal para auto-login');
-    }
+    console.error('❌ No se pudo completar auto-login ni registro');
   };
 
   const resetPassword = async (email: string) => {
@@ -225,7 +219,7 @@ const useUser = () => {
       const backendUser = response.data;
       const userData = {
         ...backendUser,
-        name: `${backendUser.firstName || ''} ${backendUser.lastName || ''}`.trim(),
+        name: `${(backendUser as any).firstName || ''} ${(backendUser as any).lastName || ''}`.trim(),
       };
       userActions.setUser(dispatch, userData);
     } catch (error) {

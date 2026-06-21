@@ -1,16 +1,16 @@
-# Despliegue EMW en Google Cloud Platform
+# Despliegue IRIS en Google Cloud Platform
 
 ## ✅ Estado: DESPLEGADO EXITOSAMENTE
 
 ### URLs de Producción
 
 #### Backend
-- **URL**: https://emw-backend-6dalnsowyq-uc.a.run.app
-- **Health Check**: https://emw-backend-6dalnsowyq-uc.a.run.app/api/health
-- **Docs API**: https://emw-backend-6dalnsowyq-uc.a.run.app/api/docs
+- **URL**: https://iris-backend-6dalnsowyq-uc.a.run.app
+- **Health Check**: https://iris-backend-6dalnsowyq-uc.a.run.app/api/health
+- **Docs API**: https://iris-backend-6dalnsowyq-uc.a.run.app/api/docs
 
 #### Frontend
-- **URL**: https://emw-frontend-6dalnsowyq-uc.a.run.app
+- **URL**: https://iris-frontend-6dalnsowyq-uc.a.run.app
 
 ### Configuración de GCP
 
@@ -24,7 +24,7 @@
 - **Instancia**: emergentdb
 - **Versión**: PostgreSQL 15
 - **Database**: ewm
-- **Usuario**: emwuser
+- **Usuario**: irisuser
 - **Password**: `<ROTAR_EN_SECRET_MANAGER>`
 - **Connection Name**: emergent-enterprises:us-central1:emergentdb
 - **Estado**: RUNNABLE
@@ -56,26 +56,26 @@ WHATSAPP_WEBHOOK_VERIFY_TOKEN=<ROTAR_EN_META_BUSINESS>
 HOST=0.0.0.0
 DB_HOST=/cloudsql/emergent-enterprises:us-central1:emergentdb
 DB_PORT=5432
-DB_USERNAME=emwuser
+DB_USERNAME=irisuser
 DB_PASSWORD=<ROTAR_EN_CLOUD_SQL>
-DB_DATABASE=ewm
+DB_DATABASE=iris
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_LAZY_CONNECT=true
-FRONTEND_URL=https://emw-frontend-6dalnsowyq-uc.a.run.app
-APP_URL=https://emw-backend-6dalnsowyq-uc.a.run.app
+FRONTEND_URL=https://iris-frontend-6dalnsowyq-uc.a.run.app
+APP_URL=https://iris-backend-6dalnsowyq-uc.a.run.app
 ```
 
 ### Variables de Entorno (Frontend)
 
 ```
 NODE_ENV=production
-NEXT_PUBLIC_API_URL=https://emw-backend-6dalnsowyq-uc.a.run.app/api
+NEXT_PUBLIC_API_URL=https://iris-backend-6dalnsowyq-uc.a.run.app/api
 ```
 
 ### Recursos Cloud Run
 
-#### Backend (emw-backend)
+#### Backend (iris-backend)
 - **Memoria**: 2Gi
 - **CPU**: 2
 - **Timeout**: 300s
@@ -84,7 +84,7 @@ NEXT_PUBLIC_API_URL=https://emw-backend-6dalnsowyq-uc.a.run.app/api
 - **Max Instances**: 10
 - **Cloud SQL**: Conectado via Unix socket
 
-#### Frontend (emw-frontend)
+#### Frontend (iris-frontend)
 - **Memoria**: 1Gi
 - **CPU**: 1
 - **Timeout**: 60s
@@ -96,7 +96,7 @@ NEXT_PUBLIC_API_URL=https://emw-backend-6dalnsowyq-uc.a.run.app/api
 
 #### Ver logs del backend
 ```bash
-gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=emw-backend" \
+gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=iris-backend" \
   --project=emergent-enterprises \
   --limit=50 \
   --format="table(timestamp,severity,textPayload)"
@@ -104,7 +104,7 @@ gcloud logging read "resource.type=cloud_run_revision AND resource.labels.servic
 
 #### Ver logs del frontend
 ```bash
-gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=emw-frontend" \
+gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=iris-frontend" \
   --project=emergent-enterprises \
   --limit=50 \
   --format="table(timestamp,severity,textPayload)"
@@ -112,7 +112,7 @@ gcloud logging read "resource.type=cloud_run_revision AND resource.labels.servic
 
 #### Actualizar variables de entorno del backend
 ```bash
-gcloud run services update emw-backend \
+gcloud run services update iris-backend \
   --region=us-central1 \
   --project=emergent-enterprises \
   --update-env-vars="VARIABLE=valor"
@@ -120,13 +120,13 @@ gcloud run services update emw-backend \
 
 #### Redesplegar backend
 ```bash
-cd /datos/repos/humanizar/EMW/emw-backend
+cd /datos/repos/prizma/IRIS/iris-backend
 gcloud builds submit --config cloudbuild.yaml --project=emergent-enterprises --async
 ```
 
 #### Redesplegar frontend
 ```bash
-cd /datos/repos/humanizar/EMW/emw-frontend
+cd /datos/repos/prizma/IRIS/iris-frontend
 gcloud builds submit --config cloudbuild.yaml --project=emergent-enterprises --async
 ```
 
@@ -186,9 +186,9 @@ gcloud builds submit --config cloudbuild.yaml --project=emergent-enterprises --a
 ### Troubleshooting
 
 #### Si el backend no responde
-1. Verificar logs: `gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=emw-backend"`
+1. Verificar logs: `gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=iris-backend"`
 2. Verificar estado de Cloud SQL: `gcloud sql instances describe emergentdb`
-3. Verificar variables de entorno: `gcloud run services describe emw-backend --format=json | jq '.spec.template.spec.containers[0].env'`
+3. Verificar variables de entorno: `gcloud run services describe iris-backend --format=json | jq '.spec.template.spec.containers[0].env'`
 
 #### Si hay errores de CORS
 1. Verificar que FRONTEND_URL esté configurada correctamente en el backend

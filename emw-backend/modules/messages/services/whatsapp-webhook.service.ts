@@ -145,6 +145,44 @@ export class WhatsappWebhookService {
   }
 
   /**
+   * CIERRE DE FUGA CROSS-TENANT:
+   * Resuelve el userId que es dueño del phone_number_id que recibió el webhook.
+   * Esto permite asociar el opt-in al tenant correcto, no a cualquier usuario que
+   * comparta el número de teléfono del cliente.
+   *
+   * Returns null si el phone_number_id no está registrado (fallback seguro).
+   */
+  private async resolveUserIdFromPhoneNumberId(phoneNumberId?: string): Promise<string | null> {
+    if (!phoneNumberId) {
+      this.logger.debug('⚠️ No phoneNumberId provided, cannot resolve userId');
+      return null;
+    }
+
+    try {
+      const account = await this.whatsappAccountRepository.findOne({
+        where: { phoneNumberId, isActive: true },
+      });
+
+      if (!account) {
+        this.logger.warn(
+          `⚠️ No WhatsAppAccount found for phoneNumberId=${phoneNumberId}`,
+        );
+        return null;
+      }
+
+      this.logger.debug(
+        `✅ Resolved userId=${account.userId} from phoneNumberId=${phoneNumberId}`,
+      );
+      return account.userId;
+    } catch (err: any) {
+      this.logger.error(
+        `💥 Error resolving userId from phoneNumberId=${phoneNumberId}: ${err?.message}`,
+      );
+      return null;
+    }
+  }
+
+  /**
    * === PUNTO DE ENTRADA DESDE EL CONTROLLER ===
    * Recorre todas las entradas del webhook y procesa cada "change".
    * Devuelve:
@@ -261,7 +299,10 @@ export class WhatsappWebhookService {
             );
             this.logger.log(incoming);
 
-            const result = await this.processIncomingMessage(incoming);
+            const result = await this.processIncomingMessage(
+              incoming,
+              value?.metadata?.phone_number_id,
+            );
             if (result?.consentAccepted === true) {
               consentsRecorded += 1;
             }
@@ -301,6 +342,7 @@ export class WhatsappWebhookService {
     text: string | undefined;
     context?: { id?: string };
     from: string;
+    phoneNumberId?: string;
   } {
     return {
       messageId: msg.id,
@@ -312,6 +354,7 @@ export class WhatsappWebhookService {
         undefined,
       context: msg.context,
       from: msg.from,
+      phoneNumberId: value?.metadata?.phone_number_id,
     };
   }
 
@@ -319,14 +362,18 @@ export class WhatsappWebhookService {
    * Revisa si el mensaje entrante del usuario final es un "SÍ" válido (opt-in),
    * y si sí, dispara recordConsentDecision().
    */
-  private async processIncomingMessage(incoming: {
-    messageId: string;
-    type: string;
-    timestamp: string;
-    text?: string;
-    context?: { id?: string };
-    from: string;
-  }): Promise<{ consentAccepted: boolean }> {
+  private async processIncomingMessage(
+    incoming: {
+      messageId: string;
+      type: string;
+      timestamp: string;
+      text?: string;
+      context?: { id?: string };
+      from: string;
+      phoneNumberId?: string;
+    },
+    phoneNumberId?: string,
+  ): Promise<{ consentAccepted: boolean }> {
     const rawText = (incoming.text || '').trim().toLowerCase();
 
     const isPositiveConsent =
@@ -350,6 +397,7 @@ export class WhatsappWebhookService {
       `🔍 recordConsentDecision START waId=${incoming.from} consent=true method=${incoming.type} value="${rawText}"`,
     );
 
+    const resolvedPhoneNumberId = phoneNumberId || incoming.phoneNumberId;
     await this.recordConsentDecision({
       waId: incoming.from,
       consentAccepted: true,
@@ -357,6 +405,7 @@ export class WhatsappWebhookService {
       value: rawText,
       whatsappMessageId: incoming.messageId,
       messageTimestamp: incoming.timestamp,
+      phoneNumberId: resolvedPhoneNumberId,
     });
 
     this.logger.log(
@@ -381,6 +430,7 @@ export class WhatsappWebhookService {
     value?: string;
     whatsappMessageId?: string;
     messageTimestamp?: string;
+    phoneNumberId?: string;
   }): Promise<void> {
     const {
       waId,
@@ -389,6 +439,7 @@ export class WhatsappWebhookService {
       value,
       whatsappMessageId,
       messageTimestamp,
+      phoneNumberId,
     } = args;
 
     const variants = this.phoneVariants(waId);
@@ -407,15 +458,40 @@ export class WhatsappWebhookService {
       `📞 Buscando customer por phoneNumber en variantes: ${phoneCandidates.join(', ')}`,
     );
 
-    const customer = await this.customerRepository.findOne({
-      where: phoneCandidates.map(p => ({ phoneNumber: p })),
-    });
+    // CIERRE DE FUGA CROSS-TENANT:
+    // Resolver el userId dueño del phone_number_id para filtrar Customer por tenant.
+    const ownerUserId = await this.resolveUserIdFromPhoneNumberId(phoneNumberId);
+
+    let customer: Customer | null = null;
+
+    if (ownerUserId) {
+      // ✅ Búsqueda SEGURA: filtrar por userId + phoneNumber
+      this.logger.debug(
+        `🔒 Búsqueda segura: userId=${ownerUserId} + phoneNumber en ${phoneCandidates.length} variantes`,
+      );
+      customer = await this.customerRepository.findOne({
+        where: phoneCandidates.map(p => ({
+          phoneNumber: p,
+          userId: ownerUserId,
+        })),
+      });
+    } else {
+      // ⚠️ Fallback si no se pudo resolver userId:
+      // Buscar SOLO por phoneNumber (riesgo: si hay 2 usuarios con mismo número,
+      // retorna arbitrariamente). Log para auditoría.
+      this.logger.warn(
+        `⚠️ No se resolvió ownerUserId desde phoneNumberId=${phoneNumberId}. Fallback a búsqueda por phoneNumber solamente (riesgo cross-tenant).`,
+      );
+      customer = await this.customerRepository.findOne({
+        where: phoneCandidates.map(p => ({ phoneNumber: p })),
+      });
+    }
 
     if (!customer) {
       this.logger.warn(
         `⚠️ No se encontró Customer con ninguna de estas variantes (${phoneCandidates.join(
           ', ',
-        )}), no puedo registrar opt-in`,
+        )}) ${ownerUserId ? `para userId=${ownerUserId}` : '(búsqueda sin tenant filter)'}. No puedo registrar opt-in.`,
       );
       return;
     }

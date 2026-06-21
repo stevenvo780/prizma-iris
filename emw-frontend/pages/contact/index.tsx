@@ -42,7 +42,7 @@ const Contact: React.FC = () => {
             +57 324 6780067
           </a>
           <a
-            href='https://prisma-enterprice.cloud'
+            href='https://prisma-enterprise.cloud'
             target='_blank'
             rel='noreferrer'
             className={styles.contactButton}

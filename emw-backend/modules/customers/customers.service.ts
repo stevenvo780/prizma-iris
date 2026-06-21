@@ -469,8 +469,14 @@ export class CustomersService {
 
     const variants = [withPlus, noPlus];
 
+    // Cierre de fuga cross-tenant: si conocemos el dueño (userId), filtramos por él
+    // para no marcar opt-in / drenar la cola del cliente de OTRO tenant que tenga
+    // el mismo número. Sin userId mantenemos el comportamiento legacy (mejor que
+    // perder el opt-in entrante), pero el llamador debería resolver el userId.
     let customer = await this.customerRepository.findOne({
-      where: variants.map(v => ({ phoneNumber: v })),
+      where: userId
+        ? variants.map(v => ({ phoneNumber: v, userId }))
+        : variants.map(v => ({ phoneNumber: v })),
     });
 
     if (!customer) {

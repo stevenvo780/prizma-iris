@@ -2,9 +2,9 @@
   "run_id": "run_id_qa_20250821_144528",
   "timestamp": "2025-08-21T19:45:28Z",
   "project": {
-    "name": "EMW",
+    "name": "IRIS",
     "version": "2.0.0",
-    "root": "/home/stev/Documentos/repos/humanizar/EMW",
+    "root": "/home/stev/Documentos/repos/prizma/IRIS",
     "git_status": "not_a_git_repository",
     "branch": "unknown",
     "commit": "unknown"
@@ -15,14 +15,14 @@
       "runtime": "Node.js v22.18.0",
       "language": "TypeScript",
       "package_manager": "npm",
-      "main_file": "emw-backend/index.ts"
+      "main_file": "iris-backend/index.ts"
     },
     "frontend": {
       "framework": "Next.js",
       "runtime": "Node.js v22.18.0", 
       "language": "TypeScript",
       "package_manager": "npm",
-      "main_file": "emw-frontend/pages/index.tsx"
+      "main_file": "iris-frontend/pages/index.tsx"
     },
     "database": {
       "type": "MySQL",
@@ -40,8 +40,8 @@
     "frontend_port": 3000
   },
   "key_paths": {
-    "backend": "emw-backend/",
-    "frontend": "emw-frontend/",
+    "backend": "iris-backend/",
+    "frontend": "iris-frontend/",
     "docs": "EMW_Casos_Uso_QA.md",
     "artifacts": "artifacts/"
   }

@@ -1,4 +1,4 @@
-# Correcciones Frontend EMW - Resolución de Problemas
+# Correcciones Frontend IRIS - Resolución de Problemas
 
 ## Fecha: 21 de agosto de 2025
 ## Run ID: run_id_20250821_125307
@@ -164,7 +164,7 @@ const handleSubmit = async (event: FormEvent) => {
 
 ### Levantar Frontend
 ```bash
-cd /home/stev/Documentos/repos/humanizar/EMW
+cd /home/stev/Documentos/repos/prizma/IRIS
 docker-compose -f docker-compose.dev.yml up -d frontend
 ```
 

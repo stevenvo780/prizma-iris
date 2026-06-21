@@ -1,13 +1,13 @@
 {
-  "root": "/home/stev/Documentos/repos/humanizar/EMW",
+  "root": "/home/stev/Documentos/repos/prizma/IRIS",
   "branch": "main",
   "commit": "local",
   "languages": ["TypeScript", "JavaScript"],
   "managers": ["npm", "docker", "docker-compose"],
   "frameworks": ["NestJS", "Next.js", "TypeORM", "MySQL", "Redis"],
   "key_paths": {
-    "backend": "emw-backend/",
-    "frontend": "emw-frontend/", 
+    "backend": "iris-backend/",
+    "frontend": "iris-frontend/", 
     "docker_compose": "docker-compose.dev.yml",
     "env_file": ".env",
     "cases_doc": "EMW_Casos_Uso_QA.md"

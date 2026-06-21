@@ -9,10 +9,10 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const host = this.configService.get<string>('DB_HOST', 'localhost');
     const port = Number(this.configService.get<string>('DB_PORT', '5432')) || 5432;
-    const username = String(this.configService.get<string>('DB_USERNAME', 'usuarionodo'));
+    const username = String(this.configService.get<string>('DB_USERNAME', 'irisuser'));
     const passwordRaw = this.configService.get('DB_PASSWORD');
     const password = typeof passwordRaw === 'string' ? passwordRaw : String(passwordRaw ?? '');
-    const database = String(this.configService.get<string>('DB_DATABASE', 'NodoDB'));
+    const database = String(this.configService.get<string>('DB_DATABASE', 'iris'));
 
     // eslint-disable-next-line no-console
     console.log('[DatabaseConfig]', {

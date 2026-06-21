@@ -1,29 +1,29 @@
-# 🎨 EMW Frontend
+# 🎨 IRIS Frontend
 
 ## Enhanced Marketing WhatsApp - Dashboard & Management Interface
 
 <div align="center">
 
-![EMW Frontend](https://img.shields.io/badge/EMW-Frontend-blue?style=for-the-badge&logo=react)
+![IRIS Frontend](https://img.shields.io/badge/IRIS-Frontend-blue?style=for-the-badge&logo=react)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)
 
 **Interfaz moderna y responsiva para el sistema de marketing automation de WhatsApp**  
-_Parte del Ecosistema Humanizar_
+_Parte del Ecosistema Prizma_
 
 </div>
 
 ## 🌟 Descripción General
 
-EMW Frontend es la interfaz de usuario principal para la gestión del sistema de marketing automation de WhatsApp del **Ecosistema Humanizar**. Esta aplicación web moderna, construida con Next.js 13+ y TypeScript, proporciona una experiencia de usuario intuitiva y poderosa para gestionar campañas de marketing, clientes, plantillas y métricas en tiempo real.
+IRIS Frontend es la interfaz de usuario principal para la gestión del sistema de marketing automation de WhatsApp del **Ecosistema Prizma**. Esta aplicación web moderna, construida con Next.js 13+ y TypeScript, proporciona una experiencia de usuario intuitiva y poderosa para gestionar campañas de marketing, clientes, plantillas y métricas en tiempo real.
 
 ### 🎯 Propósito en el Ecosistema
 
 - **Dashboard centralizado**: Control total del marketing WhatsApp
 - **Gestión unificada**: Clientes, campañas y métricas en un solo lugar
-- **Integración seamless**: Conecta con EMW Backend y otros servicios
+- **Integración seamless**: Conecta con IRIS Backend y otros servicios
 - **Analytics en tiempo real**: Métricas y reportes instantáneos
 
 ## ✨ Características Principales
@@ -88,7 +88,7 @@ EMW Frontend es la interfaz de usuario principal para la gestión del sistema de
 ### Estructura de Directorios
 
 ```
-📁 emw-frontend/
+📁 iris-frontend/
 ├── 📁 src/                           # Código fuente principal
 │   ├── 📁 api/                       # Servicios de API
 │   │   ├── 📄 index.ts               # Configuración base de API
@@ -161,14 +161,14 @@ EMW Frontend es la interfaz de usuario principal para la gestión del sistema de
 
 - **Node.js** >= 16.x
 - **npm** >= 8.x o **yarn** >= 1.x
-- **EMW Backend** ejecutándose
+- **IRIS Backend** ejecutándose
 - **Git** para control de versiones
 
 ### 1️⃣ Instalación
 
 ```bash
 # Clonar el repositorio (si es necesario)
-cd EMW/emw-frontend
+cd IRIS/iris-frontend
 
 # Instalar dependencias
 npm install
@@ -205,7 +205,7 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 # App Configuration
-NEXT_PUBLIC_APP_NAME=EMW Marketing Platform
+NEXT_PUBLIC_APP_NAME=IRIS Marketing Platform
 NEXT_PUBLIC_APP_VERSION=2.0.0
 NEXT_PUBLIC_ENVIRONMENT=development
 
@@ -251,13 +251,13 @@ yarn start
 
 ```bash
 # Construir imagen Docker
-docker build -t emw-frontend .
+docker build -t iris-frontend .
 
 # Ejecutar contenedor
-docker run -p 3000:3000 emw-frontend
+docker run -p 3000:3000 iris-frontend
 
 # Con docker-compose (desde la raíz del proyecto)
-docker-compose up emw-frontend
+docker-compose up iris-frontend
 ```
 
 ## 🎨 Características de la Interfaz
@@ -304,7 +304,7 @@ docker-compose up emw-frontend
 
 ## 🔌 Integración con el Ecosistema
 
-### EMW Backend API
+### IRIS Backend API
 
 ```typescript
 const apiClient = axios.create({
@@ -441,10 +441,10 @@ vercel
 
 ```bash
 # Build para producción
-docker build -f Dockerfile.prod -t emw-frontend:prod .
+docker build -f Dockerfile.prod -t iris-frontend:prod .
 
 # Run en producción
-docker run -p 3000:3000 emw-frontend:prod
+docker run -p 3000:3000 iris-frontend:prod
 ```
 
 ### Variables de Entorno por Ambiente
@@ -454,10 +454,10 @@ docker run -p 3000:3000 emw-frontend:prod
 NEXT_PUBLIC_API_URL=http://localhost:3001/api
 
 # .env.staging
-NEXT_PUBLIC_API_URL=https://staging-api.emw.com/api
+NEXT_PUBLIC_API_URL=https://staging-api.iris.com/api
 
 # .env.production
-NEXT_PUBLIC_API_URL=https://api.emw.com/api
+NEXT_PUBLIC_API_URL=https://api.iris.com/api
 ```
 
 ## 📱 Responsive Design
@@ -507,8 +507,8 @@ NEXT_PUBLIC_API_URL=https://api.emw.com/api
 
 ### Enlaces Útiles
 
-- [EMW Backend Documentation](../emw-backend/README.md)
-- [Ecosistema Humanizar](../../README.md)
+- [IRIS Backend Documentation](../iris-backend/README.md)
+- [Ecosistema Prizma](../../README.md)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 
@@ -523,7 +523,7 @@ NEXT_PUBLIC_API_URL=https://api.emw.com/api
 #### Error de conexión API
 
 ```bash
-# Verificar que EMW Backend esté ejecutándose
+# Verificar que IRIS Backend esté ejecutándose
 curl http://localhost:3001/health
 
 # Verificar variables de entorno
@@ -545,9 +545,9 @@ npm install
 
 <div align="center">
 
-**EMW Frontend v2.0.0**  
-_Dashboard de Marketing WhatsApp - Ecosistema Humanizar_
+**IRIS Frontend v2.0.0**  
+_Dashboard de Marketing WhatsApp - Ecosistema Prizma_
 
-![Humanizar](https://img.shields.io/badge/Humanizar-Ecosystem-orange?style=for-the-badge)
+![Prizma](https://img.shields.io/badge/Prizma-Ecosystem-orange?style=for-the-badge)
 
 </div>

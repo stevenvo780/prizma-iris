@@ -29,14 +29,14 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S emwservice -u 1001 -G nodejs
+    adduser -S irisservice -u 1001 -G nodejs
 
-COPY --from=builder --chown=emwservice:nodejs /app/dist ./dist
-COPY --from=builder --chown=emwservice:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=emwservice:nodejs /app/package.json ./
-COPY --from=builder --chown=emwservice:nodejs /app/config ./config
+COPY --from=builder --chown=irisservice:nodejs /app/dist ./dist
+COPY --from=builder --chown=irisservice:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=irisservice:nodejs /app/package.json ./
+COPY --from=builder --chown=irisservice:nodejs /app/config ./config
 
-USER emwservice
+USER irisservice
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

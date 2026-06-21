@@ -1,9 +1,9 @@
-# EMW Backend – servicios auxiliares DEV
-# DB: pgram en humanizar2 (100.98.5.11:5432) via NetBird VPN
+# IRIS Backend – servicios auxiliares DEV
+# DB: pgram en prizma2 (100.98.5.11:5432) via NetBird VPN
 services:
   redis:
     image: redis:7-alpine
-    container_name: emw-redis
+    container_name: iris-redis
     ports:
       - "6379:6379"
     command: redis-server --appendonly yes

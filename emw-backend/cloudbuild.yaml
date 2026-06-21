@@ -4,7 +4,7 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/emergent-enterprises/emw-backend:latest'
+      - 'gcr.io/emergent-enterprises/iris-backend:latest'
       - '-f'
       - 'Dockerfile'
       - '.'
@@ -14,7 +14,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/emergent-enterprises/emw-backend:latest'
+      - 'gcr.io/emergent-enterprises/iris-backend:latest'
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -22,8 +22,8 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'emw-backend'
-      - '--image=gcr.io/emergent-enterprises/emw-backend:latest'
+      - 'iris-backend'
+      - '--image=gcr.io/emergent-enterprises/iris-backend:latest'
       - '--region=us-central1'
       - '--platform=managed'
       - '--allow-unauthenticated'
@@ -34,10 +34,10 @@ steps:
       - '--min-instances=0'
       - '--max-instances=10'
       - '--add-cloudsql-instances=emergent-enterprises:us-central1:emergentdb'
-      - '--set-env-vars=NODE_ENV=production,FRONTEND_URL=https://emw-frontend-633619052458.us-central1.run.app,AUTH_MODE=jwt,JWT_SECRET=secure_jwt_secret_CHANGE_IN_PROD,JWT_EXPIRES_IN=2h,JWT_REFRESH_EXPIRES_IN=7d,SESSION_SECRET=supersecret_CHANGE_IN_PROD,API_KEY=api_secret_CHANGE_IN_PROD,ENCRYPTION_KEY=16charkey_CHANGE,BCRYPT_ROUNDS=some_salt,LOG_LEVEL=info,RATE_LIMIT_TTL=60,RATE_LIMIT_LIMIT=100,MAX_LOGIN_ATTEMPTS=5,LOCKOUT_DURATION_MINUTES=30,DB_SYNCHRONIZE=false,WHATSAPP_API_BASE_URL=https://graph.facebook.com/v22.0,WHATSAPP_WEBHOOK_VERIFY_TOKEN=REDACTED_TOKEN,HOST=0.0.0.0,DB_HOST=/cloudsql/emergent-enterprises:us-central1:emergentdb,DB_PORT=5432,DB_USERNAME=emwuser,DB_PASSWORD=REDACTED_DB_PASSWORD,DB_DATABASE=ewm,REDIS_HOST=localhost,REDIS_PORT=6379,REDIS_LAZY_CONNECT=true'
+      - '--set-env-vars=NODE_ENV=production,FRONTEND_URL=https://iris-frontend-633619052458.us-central1.run.app,AUTH_MODE=jwt,JWT_SECRET=secure_jwt_secret_CHANGE_IN_PROD,JWT_EXPIRES_IN=2h,JWT_REFRESH_EXPIRES_IN=7d,SESSION_SECRET=supersecret_CHANGE_IN_PROD,API_KEY=api_secret_CHANGE_IN_PROD,ENCRYPTION_KEY=16charkey_CHANGE,BCRYPT_ROUNDS=some_salt,LOG_LEVEL=info,RATE_LIMIT_TTL=60,RATE_LIMIT_LIMIT=100,MAX_LOGIN_ATTEMPTS=5,LOCKOUT_DURATION_MINUTES=30,DB_SYNCHRONIZE=false,WHATSAPP_API_BASE_URL=https://graph.facebook.com/v22.0,WHATSAPP_WEBHOOK_VERIFY_TOKEN=REDACTED_TOKEN,HOST=0.0.0.0,DB_HOST=/cloudsql/emergent-enterprises:us-central1:emergentdb,DB_PORT=5432,DB_USERNAME=irisuser,DB_PASSWORD=REDACTED_DB_PASSWORD,DB_DATABASE=iris,REDIS_HOST=localhost,REDIS_PORT=6379,REDIS_LAZY_CONNECT=true'
 
 images:
-  - 'gcr.io/emergent-enterprises/emw-backend:latest'
+  - 'gcr.io/emergent-enterprises/iris-backend:latest'
 
 options:
   machineType: 'E2_MEDIUM'

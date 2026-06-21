@@ -2,8 +2,10 @@ import { Injectable, Logger, BadRequestException, NotFoundException } from '@nes
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThanOrEqual } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { User, UserRole } from '../auth/entities/user.entity';
 import { Payment, PaymentStatus, PaymentProvider } from './entities/payment.entity';
+import { IdempotencyKey } from './entities/idempotency-key.entity';
 import { Customer } from '../customers/entities/customer.entity';
 import { MessageLog, MessageDirection } from '../messages/entities/message-log.entity';
 import { MercadoPagoGateway } from 'prizma-payments';
@@ -86,6 +88,8 @@ export class PaymentsService {
     private userRepository: Repository<User>,
     @InjectRepository(Payment)
     private paymentRepository: Repository<Payment>,
+    @InjectRepository(IdempotencyKey)
+    private idempotencyKeyRepository: Repository<IdempotencyKey>,
     @InjectRepository(Customer)
     private customerRepository: Repository<Customer>,
     @InjectRepository(MessageLog)
@@ -120,7 +124,7 @@ export class PaymentsService {
 
     const externalReference = buildExternalRef(userId, planKey);
     const frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'https://emw.humanizar.cloud';
+      this.configService.get<string>('FRONTEND_URL') || 'https://iris.prisma-enterprise.cloud';
 
     try {
       const result = await this.gateway.createCheckout({
@@ -237,6 +241,18 @@ export class PaymentsService {
 
         // Si el pago fue aprobado y no era ya approved (idempotencia), actualizar usuario
         if (mpPayment.status === 'approved' && !wasAlreadyApproved) {
+          // Verificar que MP realmente cobró el monto y la moneda esperados del plan.
+          // Sin esto, un pago parcial o una preferencia manipulada acreditaría el
+          // plan completo. Tolerancia mínima por redondeo de centavos.
+          if (!this._verifyPaidAmount(localPayment, mpPayment)) {
+            this.logger.error(
+              `Pago ${paymentId} aprobado en MP pero el monto/moneda NO coincide con el plan ` +
+                `(esperado ${localPayment.amount} ${localPayment.currency}, ` +
+                `recibido ${mpPayment.transaction_amount} ${mpPayment.currency_id}). NO se acredita premium.`,
+            );
+            return { received: true };
+          }
+
           await this._upgradeUserToPremium(localPayment);
 
           // Publicar evento pago.aprobado al Hub (best-effort)
@@ -320,6 +336,27 @@ export class PaymentsService {
   }
 
   /**
+   * Verifica que el pago aprobado en MP coincida con el monto y la moneda del
+   * plan que el backend registró al crear la preferencia. Devuelve false si MP
+   * no reporta monto, si la moneda difiere, o si el monto cobrado es menor al
+   * esperado (con tolerancia de 1 unidad por redondeo).
+   */
+  private _verifyPaidAmount(localPayment: Payment, mpPayment: { transaction_amount?: number; currency_id?: string }): boolean {
+    const paidAmount = mpPayment.transaction_amount;
+    if (paidAmount == null || Number.isNaN(Number(paidAmount))) {
+      return false;
+    }
+
+    // Moneda: si MP la reporta, debe coincidir con la del plan.
+    if (mpPayment.currency_id && localPayment.currency && mpPayment.currency_id !== localPayment.currency) {
+      return false;
+    }
+
+    // Monto: el cobrado no puede ser menor al esperado (tolerancia mínima por redondeo).
+    return Number(paidAmount) >= Number(localPayment.amount) - 1;
+  }
+
+  /**
    * Lógica de negocio: actualizar usuario a PREMIUM tras pago aprobado.
    * Incluye cálculo de expiración y extensión de suscripción activa.
    */
@@ -328,7 +365,9 @@ export class PaymentsService {
     if (!user) return;
 
     user.role = UserRole.PREMIUM;
-    user.credits = localPayment.amount;
+    // NOTA: el premium se confiere vía role + subscriptionExpiresAt, NO vía credits.
+    // Antes se hacía `user.credits = localPayment.amount`, mezclando un monto en COP
+    // con la semántica de "créditos". Se deja credits intacto para no corromperlo.
 
     const now = new Date();
     const baseDate =
@@ -394,39 +433,24 @@ export class PaymentsService {
   }
 
   // Legacy methods (mantener compatibilidad)
-  async processPayment(details: any, userId: string) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    const paymentResult = {
-      transactionId: `txn_${Date.now()}`,
-      status: 'completed',
-      amount: details.amount || 0,
-      currency: details.currency || 'COP',
-      userId: userId,
-      timestamp: new Date().toISOString(),
-    };
-
-    if (details.amount > 0) {
-      user.credits = Number(user.credits) + details.amount * 100;
-      if (details.planType === 'premium') {
-        user.role = UserRole.PREMIUM;
-      }
-      await this.userRepository.save(user);
-    }
-
-    return {
-      success: true,
-      transaction: paymentResult,
-      user: {
-        id: user.id,
-        credits: user.credits,
-        role: user.role,
-      },
-    };
+  /**
+   * processPayment (LEGACY — DESHABILITADO).
+   *
+   * Este método acreditaba créditos y subía el rol a PREMIUM a partir del body
+   * de la request, SIN ninguna verificación contra Mercado Pago. Era una vía
+   * trivial de auto-acreditarse premium ({amount:1, planType:'premium'}).
+   *
+   * No se puede otorgar crédito/rol sin un pago confirmado por el gateway, así
+   * que el método queda deshabilitado (fail-closed). El flujo válido es
+   * createPreference → checkout MP → webhook (handleWebhook / handleHubPaymentEvent).
+   */
+  async processPayment(_details: any, _userId: string): Promise<never> {
+    this.logger.warn(
+      `processPayment (legacy) invocado para user ${_userId} — rechazado: no se acredita sin pago verificado`,
+    );
+    throw new BadRequestException(
+      'Endpoint de pago legacy deshabilitado. Usá /payments/create-preference para pagar vía Mercado Pago.',
+    );
   }
 
   async validatePayment(userId: string) {
@@ -626,5 +650,48 @@ export class PaymentsService {
     }
 
     this.logger.log(`Processed ${expiredUsers.length} expired subscriptions`);
+  }
+
+  /**
+   * Limpieza automática de filas expiradas en idempotency_keys.
+   *
+   * CRON: cada hora (CronExpression.EVERY_HOUR).
+   *
+   * PROPÓSITO:
+   * La tabla idempotency_keys persiste webhooks para deduplicación dentro de 24h.
+   * Sin limpieza, la tabla crece indefinidamente. Este job borra filas con
+   * expiresAt < NOW() una vez por hora.
+   *
+   * TTL TÍPICO: 24h desde creación (ver IdempotencyKey.expiresAt).
+   * El Hub reintenta webhooks dentro de 1h usualmente, así que hay margen.
+   *
+   * OPERACIONAL:
+   * - Logging: si se borraron rows, se registra el count.
+   * - Seguridad: FAIL-CLOSED; si la query falla, no detiene otras rutas.
+   * - Auditoría: logger a nivel INFO para seguimiento en prod.
+   */
+  @Cron(CronExpression.EVERY_HOUR)
+  private async cleanupExpiredIdempotencyKeys(): Promise<void> {
+    try {
+      const now = new Date();
+
+      const result = await this.idempotencyKeyRepository.delete({
+        expiresAt: LessThanOrEqual(now),
+      });
+
+      const deletedCount = result.affected ?? 0;
+
+      if (deletedCount > 0) {
+        this.logger.log(
+          `Cleanup idempotency_keys: deleted ${deletedCount} expired rows (expiresAt < ${now.toISOString()})`,
+        );
+      }
+    } catch (error) {
+      // FAIL-CLOSED: si la limpieza falla, loguear y continuar.
+      // No propagar el error; otros procesos siguen normales.
+      this.logger.error(
+        `Failed to cleanup expired idempotency_keys: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 }

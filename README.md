@@ -1,9 +1,9 @@
-# 📱 EMW - Enhanced Marketing WhatsApp
+# 📱 IRIS - Enhanced Marketing WhatsApp
 ## Sistema Completo de Mensajería Masiva para WhatsApp Business
 
 <div align="center">
 
-![EMW Logo](https://img.shields.io/badge/EMW-Full%20Stack-blue?style=for-the-badge&logo=whatsapp)
+![IRIS Logo](https://img.shields.io/badge/IRIS-Full%20Stack-blue?style=for-the-badge&logo=whatsapp)
 ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
@@ -11,7 +11,7 @@
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
 **Plataforma completa de marketing automation para WhatsApp Business**  
-*Desarrollado para el Ecosistema Humanizar*
+*Desarrollado para el Ecosistema Prizma*
 
 [📱 Demo en Vivo](#demo) | [🚀 Instalación](#instalación) | [📖 Documentación](#documentación) | [🤝 Contribuir](#contribuir)
 
@@ -21,7 +21,7 @@
 
 ## 🌟 Descripción General
 
-EMW es una plataforma completa de **mensajería masiva para WhatsApp Business** que permite a las empresas gestionar campañas de marketing, enviar mensajes masivos, crear plantillas dinámicas y administrar listas de clientes de manera eficiente y escalable.
+IRIS es una plataforma completa de **mensajería masiva para WhatsApp Business** que permite a las empresas gestionar campañas de marketing, enviar mensajes masivos, crear plantillas dinámicas y administrar listas de clientes de manera eficiente y escalable.
 
 ### 🎯 Funcionalidades Principales
 
@@ -69,7 +69,7 @@ EMW es una plataforma completa de **mensajería masiva para WhatsApp Business** 
 
 ### Backend (NestJS)
 ```
-📦 emw-backend/
+📦 iris-backend/
 ├── 🔐 auth/              # Autenticación JWT + roles
 ├── 📱 accounts/          # Gestión cuentas WhatsApp
 ├── 📨 messages/          # Envío y tracking de mensajes
@@ -83,7 +83,7 @@ EMW es una plataforma completa de **mensajería masiva para WhatsApp Business** 
 
 ### Frontend (Next.js)
 ```
-📦 emw-frontend/
+📦 iris-frontend/
 ├── 🏠 pages/
 │   ├── 📨 messages/      # Dashboard principal
 │   ├── 📝 templates/     # Editor de plantillas
@@ -111,8 +111,8 @@ EMW es una plataforma completa de **mensajería masiva para WhatsApp Business** 
 
 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/stevenvo780/emw-backend.git
-cd emw-backend
+git clone https://github.com/stevenvo780/iris-backend.git
+cd iris-backend
 ```
 
 2. **Instalar dependencias**
@@ -133,7 +133,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=3306
 DATABASE_USERNAME=tu_usuario
 DATABASE_PASSWORD=tu_password
-DATABASE_NAME=emw_database
+DATABASE_NAME=iris_database
 
 # Redis
 REDIS_HOST=localhost
@@ -178,7 +178,7 @@ npm start
 
 1. **Navegar al directorio frontend**
 ```bash
-cd ../emw-frontend
+cd ../iris-frontend
 ```
 
 2. **Instalar dependencias**
@@ -513,7 +513,7 @@ POST /accounts/{id}/set-active
 version: '3.8'
 services:
   backend:
-    build: ./emw-backend
+    build: ./iris-backend
     ports:
       - "3001:3001"
     environment:
@@ -525,7 +525,7 @@ services:
       - redis
 
   frontend:
-    build: ./emw-frontend
+    build: ./iris-frontend
     ports:
       - "3000:3000"
     environment:
@@ -537,7 +537,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: emw_database
+      MYSQL_DATABASE: iris_database
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -562,7 +562,7 @@ docker-compose logs -f backend
 docker-compose up -d --scale backend=3
 
 # Backup de base de datos
-docker-compose exec mysql mysqldump -u root -p emw_database > backup.sql
+docker-compose exec mysql mysqldump -u root -p iris_database > backup.sql
 ```
 
 ---
@@ -595,8 +595,8 @@ docker-compose exec mysql mysqldump -u root -p emw_database > backup.sql
 
 ```bash
 # Fork del repositorio
-git clone https://github.com/tu-usuario/EMW.git
-cd EMW
+git clone https://github.com/tu-usuario/IRIS.git
+cd IRIS
 
 # Crear rama para feature
 git checkout -b feature/nueva-funcionalidad
@@ -624,10 +624,10 @@ npm run dev:all
 
 ### 🆘 **Obtener Ayuda**
 
-- 📧 **Email**: soporte@humanizar.com
+- 📧 **Email**: soporte@prizma.com
 - 💬 **Discord**: [Servidor de la Comunidad](#)
 - 📱 **WhatsApp**: +34 XXX XXX XXX
-- 🐛 **Issues**: [GitHub Issues](https://github.com/humanizar/EMW/issues)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/prizma/IRIS/issues)
 
 ### 📚 **Recursos Adicionales**
 
@@ -646,7 +646,7 @@ Este proyecto está licenciado bajo la **MIT License**. Ver el archivo [LICENSE]
 
 ## ⭐ ¿Te gusta el proyecto?
 
-Si EMW te ha sido útil, considera:
+Si IRIS te ha sido útil, considera:
 
 - ⭐ **Dar una estrella** al repositorio
 - 🍴 **Hacer fork** para contribuir
@@ -657,12 +657,12 @@ Si EMW te ha sido útil, considera:
 
 <div align="center">
 
-**🚀 Hecho con ❤️ para el Ecosistema Humanizar**
+**🚀 Hecho con ❤️ para el Ecosistema Prizma**
 
 [🌐 Website](#) | [📱 Demo](#) | [📧 Contacto](#) | [💬 Community](#)
 
 ---
 
-*EMW - Transformando la comunicación empresarial, un mensaje a la vez.*
+*IRIS - Transformando la comunicación empresarial, un mensaje a la vez.*
 
 </div>

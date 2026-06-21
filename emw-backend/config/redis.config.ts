@@ -22,7 +22,7 @@ export class RedisConfig {
   }
 
   get keyPrefix(): string {
-    return this.configService.get<string>('REDIS_KEY_PREFIX', 'emw:');
+    return this.configService.get<string>('REDIS_KEY_PREFIX', 'iris:');
   }
 
   get maxRetriesPerRequest(): number {

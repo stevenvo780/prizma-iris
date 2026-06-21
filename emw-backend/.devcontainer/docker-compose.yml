@@ -1,18 +1,18 @@
 services:
   app:
-    container_name: emw_backend
+    container_name: iris_backend
     image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
     volumes:
-      - ..:/workspaces/emw_backend:cached
+      - ..:/workspaces/iris_backend:cached
     command: sleep infinity
     environment:
       PORT: 5000
       # Database (pgram via NetBird VPN)
       DB_HOST: "100.98.5.11"
       DB_PORT: 5432
-      DB_USERNAME: "emwuser"
+      DB_USERNAME: "irisuser"
       DB_PASSWORD: "c8dc0dc1afe7b8a824814d059bfd4b0022c3d5c196266a6c"
-      DB_DATABASE: "ewm"
+      DB_DATABASE: "iris"
       # Redis
       REDIS_HOST: "cache"
       REDIS_PORT: 6379
@@ -25,6 +25,6 @@ services:
       FRONTEND_URL: "http://localhost:3001,http://localhost:3000"
   cache:
     image: redis:7-alpine
-    container_name: emw_redis
+    container_name: iris_redis
     ports:
       - "6379:6379"

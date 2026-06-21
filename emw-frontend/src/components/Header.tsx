@@ -299,16 +299,16 @@ const Header = () => {
 
       <Navbar expand='lg' className='modern-header'>
         <Container fluid>
-          <Navbar.Brand href='https://www.humanizar.co/' target='_blank' className='brand-section'>
+          <Navbar.Brand href='https://www.prizma.co/' target='_blank' className='brand-section'>
             <Image
               src={logo}
-              alt='EMW Logo'
+              alt='IRIS Logo'
               width={40}
               height={40}
               style={{ borderRadius: '8px' }}
             />
             <div className='brand-text'>
-              <span className='brand-title'>EMW</span>
+              <span className='brand-title'>IRIS</span>
               {user && (
                 <span className='user-greeting'>
                   Hola, {user.name?.split(' ')[0] || 'Usuario'}

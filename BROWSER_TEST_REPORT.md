@@ -1,4 +1,4 @@
-# 🎉 REPORTE FINAL - SISTEMA EMW DESPLEGADO Y FUNCIONAL
+# 🎉 REPORTE FINAL - SISTEMA IRIS DESPLEGADO Y FUNCIONAL
 
 **Fecha:** 19 de Noviembre de 2025  
 **Estado:** ✅ SISTEMA COMPLETAMENTE OPERATIVO
@@ -20,32 +20,32 @@ El frontend estaba intentando conectarse a `http://localhost:3001` en lugar del 
 ## ✅ Pruebas de Navegador Realizadas
 
 ### 1. Página Principal (HOME)
-- **URL:** https://emw-frontend-6dalnsowyq-uc.a.run.app
+- **URL:** https://iris-frontend-6dalnsowyq-uc.a.run.app
 - **Estado:** ✅ Funcional
 - **Backend:** ✅ Conectado
 - **Screenshot:** /tmp/final-1-home.png
 
 ### 2. Página de Login
-- **URL:** https://emw-frontend-6dalnsowyq-uc.a.run.app/login
+- **URL:** https://iris-frontend-6dalnsowyq-uc.a.run.app/login
 - **Estado:** ✅ Funcional
 - **Formulario:** ✅ Presente (password field detectado)
 - **Backend:** ✅ Conectado
 - **Screenshot:** /tmp/final-2-login.png
 
 ### 3. Página de Customers
-- **URL:** https://emw-frontend-6dalnsowyq-uc.a.run.app/customers
+- **URL:** https://iris-frontend-6dalnsowyq-uc.a.run.app/customers
 - **Estado:** ✅ Funcional
 - **Backend:** ✅ Conectado
 - **Screenshot:** /tmp/final-3-customers.png
 
 ### 4. Página de Messages
-- **URL:** https://emw-frontend-6dalnsowyq-uc.a.run.app/messages
+- **URL:** https://iris-frontend-6dalnsowyq-uc.a.run.app/messages
 - **Estado:** ✅ Funcional
 - **Backend:** ✅ Conectado
 - **Screenshot:** /tmp/final-4-messages.png
 
 ### 5. Página de Templates
-- **URL:** https://emw-frontend-6dalnsowyq-uc.a.run.app/templates
+- **URL:** https://iris-frontend-6dalnsowyq-uc.a.run.app/templates
 - **Estado:** ✅ Funcional
 - **Backend:** ✅ Conectado
 - **Screenshot:** /tmp/final-5-templates.png
@@ -60,7 +60,7 @@ El frontend estaba intentando conectarse a `http://localhost:3001` en lugar del 
 **Evidencia:**
 - Requests detectados: GET /api/health
 - Responses recibidos: HTTP 200
-- URL del backend: https://emw-backend-6dalnsowyq-uc.a.run.app
+- URL del backend: https://iris-backend-6dalnsowyq-uc.a.run.app
 
 ---
 
@@ -107,7 +107,7 @@ Todas las capturas de pantalla están disponibles en:
 
 ## 🎊 Conclusión
 
-**El sistema EMW está completamente desplegado, configurado y operativo en Google Cloud Platform.**
+**El sistema IRIS está completamente desplegado, configurado y operativo en Google Cloud Platform.**
 
 Todas las pruebas de navegador confirman que:
 1. El frontend carga correctamente

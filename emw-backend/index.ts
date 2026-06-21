@@ -20,8 +20,20 @@ async function bootstrap() {
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
 
+  // CORS: en producción restringimos a la lista blanca (ALLOWED_ORIGINS);
+  // fuera de producción reflejamos cualquier origen para facilitar el desarrollo.
+  // Antes era origin:true + credentials:true en todos los entornos, lo que permitía
+  // que cualquier sitio hiciera peticiones autenticadas al API.
+  const isProduction = cfg.get<string>('NODE_ENV') === 'production';
+  const allowedOrigins = (
+    cfg.get<string>('ALLOWED_ORIGINS') || 'http://localhost:3000,http://localhost:3005'
+  )
+    .split(',')
+    .map(o => o.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: true,
+    origin: isProduction ? allowedOrigins : true,
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
@@ -40,7 +52,7 @@ async function bootstrap() {
   app.use(bodyParser.json());
 
   const swaggerCfg = new DocumentBuilder()
-    .setTitle('EMW Unified API')
+    .setTitle('Iris Unified API')
     .setDescription('WhatsApp Business Marketing Platform - Unified API')
     .setVersion('2.0.0')
     .addBearerAuth()
@@ -50,7 +62,11 @@ async function bootstrap() {
 
   const port = parseInt(cfg.get<string>('PORT') || '3001', 10);
   await app.listen(port);
-  logger.log(`[CORS] origin => * (all origins allowed)`);
+  logger.log(
+    isProduction
+      ? `[CORS] origins => ${allowedOrigins.join(', ')}`
+      : `[CORS] origin => * (dev: all origins reflected)`,
+  );
 }
 
 bootstrap().catch(err => {

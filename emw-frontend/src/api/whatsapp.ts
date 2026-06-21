@@ -9,6 +9,10 @@ export function reconnectWhatsApp() {
 }
 
 export function createWppAccount(data: any) {
+  // Validar que accessToken no esté vacío
+  if (!data.accessToken || typeof data.accessToken !== 'string' || data.accessToken.trim() === '') {
+    throw new Error('accessToken es requerido y no puede estar vacío');
+  }
 
   const payload = {
     name: data.name,
@@ -17,7 +21,16 @@ export function createWppAccount(data: any) {
     businessAccountId: data.businessAccountId,
     accessToken: data.accessToken,
   };
-  console.log('📤 Creando cuenta WhatsApp con payload (sin type):', payload);
+
+  // Log seguro sin exponer el token
+  const logPayload = {
+    name: data.name,
+    phoneNumber: data.phoneNumber,
+    phoneNumberId: data.phoneNumberId,
+    businessAccountId: data.businessAccountId,
+    accessToken: '***REDACTED***',
+  };
+  console.log('📤 Creando cuenta WhatsApp:', logPayload);
   return service.post('/accounts', payload);
 }
 
@@ -43,8 +56,10 @@ export function updateWppAccount(id: string, data: Partial<{ name: string; acces
   if (data.accessToken) payload.accessToken = data.accessToken;
   if (data.businessAccountId) payload.businessAccountId = data.businessAccountId;
 
-  console.log('🔧 updateWppAccount - Datos recibidos:', data);
-  console.log('🔧 updateWppAccount - Payload a enviar:', payload);
+  const logData = { ...data, accessToken: data.accessToken ? 'access_token_***' : undefined };
+  const logPayload = { ...payload, accessToken: payload.accessToken ? 'access_token_***' : undefined };
+  console.log('🔧 updateWppAccount - Datos recibidos:', logData);
+  console.log('🔧 updateWppAccount - Payload a enviar:', logPayload);
 
   return service.put(`/accounts/${id}`, payload);
 }

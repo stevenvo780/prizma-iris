@@ -22,7 +22,7 @@ API_PORT="${API_PORT:-${PORT:-3001}}"
 API_URL="${API_URL:-http://$API_HOST:$API_PORT/api}"
 
 # Temporary files for test results
-TEMP_DIR="/tmp/emw-api-health-test"
+TEMP_DIR="/tmp/iris-api-health-test"
 mkdir -p "$TEMP_DIR"
 
 # Cleanup function
@@ -88,7 +88,7 @@ make_request() {
 echo "📋 Test 1: Basic Service Connectivity"
 
 # Test API server connectivity
-if check_service "EMW API" "$API_HOST" "$API_PORT"; then
+if check_service "IRIS API" "$API_HOST" "$API_PORT"; then
     API_RUNNING=true
 else
     API_RUNNING=false

@@ -97,17 +97,24 @@ export class WebhookController {
           'Skipping WhatsApp webhook signature validation (development mode)',
         );
       } else {
-        const isValid = await this.whatsappWebhookService.validateSignature(
+        const result = await this.whatsappWebhookService.validateSignature(
           rawBody,
           signature,
         );
 
-        if (!isValid) {
-          // NOTA: Según Meta docs, la validación de firma es opcional.
-          // En lugar de bloquear, logueamos warning y continuamos.
-          // Esto permite procesar opt-ins mientras se configura el appSecret correcto.
-          this.logger.warn(
-            '⚠️ WhatsApp webhook signature validation failed - continuing anyway (per Meta docs: validation is optional)',
+        if (result.status === 'invalid') {
+          // FAIL-CLOSED: hay un appSecret configurado y la firma NO coincide
+          // (o falta). Rechazamos para evitar opt-ins/colas forzados por payloads
+          // falsos. Antes esto se logueaba y se continuaba (fail-open).
+          this.logger.error(
+            '⛔ WhatsApp webhook signature INVALID with secret configured - rejecting (403)',
+          );
+          throw new HttpException('Invalid webhook signature', HttpStatus.FORBIDDEN);
+        } else if (result.status === 'no-secret') {
+          // No hay secreto configurado: no se puede validar. Permitido per Meta docs,
+          // pero en producción se registra como error para que se configure.
+          this.logger.error(
+            '⚠️ WhatsApp webhook sin appSecret configurado - no se valida la firma (configurar WHATSAPP_APP_SECRET)',
           );
         } else {
           this.logger.log('✅ Signature validation passed');

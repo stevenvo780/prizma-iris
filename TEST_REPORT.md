@@ -1,4 +1,4 @@
-# 🎉 Reporte de Pruebas - Despliegue EMW en GCP
+# 🎉 Reporte de Pruebas - Despliegue IRIS en GCP
 
 **Fecha:** 19 de Noviembre de 2025
 **Estado:** ✅ TODAS LAS PRUEBAS PASARON
@@ -8,15 +8,15 @@
 ## URLs de Producción
 
 ### Backend
-- **URL Principal**: https://emw-backend-6dalnsowyq-uc.a.run.app
-- **URL Alternativa**: https://emw-backend-633619052458.us-central1.run.app
-- **Health Check**: https://emw-backend-6dalnsowyq-uc.a.run.app/api/health
-- **API Docs (Swagger)**: https://emw-backend-6dalnsowyq-uc.a.run.app/api/docs
+- **URL Principal**: https://iris-backend-6dalnsowyq-uc.a.run.app
+- **URL Alternativa**: https://iris-backend-633619052458.us-central1.run.app
+- **Health Check**: https://iris-backend-6dalnsowyq-uc.a.run.app/api/health
+- **API Docs (Swagger)**: https://iris-backend-6dalnsowyq-uc.a.run.app/api/docs
 
 ### Frontend
-- **URL Principal**: https://emw-frontend-6dalnsowyq-uc.a.run.app
-- **URL Alternativa**: https://emw-frontend-633619052458.us-central1.run.app
-- **Login Page**: https://emw-frontend-6dalnsowyq-uc.a.run.app/login
+- **URL Principal**: https://iris-frontend-6dalnsowyq-uc.a.run.app
+- **URL Alternativa**: https://iris-frontend-633619052458.us-central1.run.app
+- **Login Page**: https://iris-frontend-6dalnsowyq-uc.a.run.app/login
 
 ---
 
@@ -34,7 +34,7 @@
 
 ### 2. Backend - Swagger Documentation
 **Estado:** ✅ PASÓ
-- URL: https://emw-backend-6dalnsowyq-uc.a.run.app/api/docs
+- URL: https://iris-backend-6dalnsowyq-uc.a.run.app/api/docs
 - HTTP Status: 200
 - Documentación API totalmente accesible
 
@@ -55,7 +55,7 @@
 **Estado:** ✅ PASÓ
 ```
 Headers detectados:
-- access-control-allow-origin: https://emw-frontend-6dalnsowyq-uc.a.run.app
+- access-control-allow-origin: https://iris-frontend-6dalnsowyq-uc.a.run.app
 - access-control-allow-credentials: true
 - access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS
 - access-control-allow-headers: Content-Type,Authorization,X-Requested-With,Accept
@@ -79,14 +79,14 @@ Rutas principales detectadas:
 
 ### 6. Frontend - Home Page
 **Estado:** ✅ PASÓ
-- URL: https://emw-frontend-6dalnsowyq-uc.a.run.app
+- URL: https://iris-frontend-6dalnsowyq-uc.a.run.app
 - HTTP Status: 200
 - Página carga correctamente
 - Screenshot guardado: `/tmp/frontend-home.png`
 
 ### 7. Frontend - Login Page
 **Estado:** ✅ PASÓ
-- URL: https://emw-frontend-6dalnsowyq-uc.a.run.app/login
+- URL: https://iris-frontend-6dalnsowyq-uc.a.run.app/login
 - HTTP Status: 200
 - Página de login accesible
 - Screenshot guardado: `/tmp/frontend-login.png`
@@ -96,7 +96,7 @@ Rutas principales detectadas:
 - Cloud SQL PostgreSQL conectado correctamente
 - Instancia: emergentdb
 - Base de datos: ewm
-- Usuario: emwuser
+- Usuario: irisuser
 - Tablas creadas automáticamente vía TypeORM
 - Sincronización deshabilitada por seguridad (DB_SYNCHRONIZE=false)
 
@@ -108,14 +108,14 @@ Rutas principales detectadas:
 ✅ Todas las variables apuntan a servicios correctos:
 - `DB_HOST`: `/cloudsql/emergent-enterprises:us-central1:emergentdb` ✅
 - `REDIS_HOST`: `localhost` ⚠️ (OK con REDIS_LAZY_CONNECT=true, pendiente Memory Store)
-- `FRONTEND_URL`: `https://emw-frontend-6dalnsowyq-uc.a.run.app` ✅
-- `APP_URL`: `https://emw-backend-6dalnsowyq-uc.a.run.app` ✅
+- `FRONTEND_URL`: `https://iris-frontend-6dalnsowyq-uc.a.run.app` ✅
+- `APP_URL`: `https://iris-backend-6dalnsowyq-uc.a.run.app` ✅
 - `WHATSAPP_API_BASE_URL`: `https://graph.facebook.com/v22.0` ✅
 - `HOST`: `0.0.0.0` ✅
 
 ### Frontend
 ✅ Variables correctas:
-- `NEXT_PUBLIC_API_URL`: `https://emw-backend-6dalnsowyq-uc.a.run.app/api` ✅
+- `NEXT_PUBLIC_API_URL`: `https://iris-backend-6dalnsowyq-uc.a.run.app/api` ✅
 - `NODE_ENV`: `production` ✅
 
 ---
@@ -126,7 +126,7 @@ Rutas principales detectadas:
 |------------|--------|---------------|
 | Backend (Cloud Run) | ✅ Running | 2Gi RAM, 2 CPU, Puerto 8080 |
 | Frontend (Cloud Run) | ✅ Running | 1Gi RAM, 1 CPU, Puerto 3000 |
-| Cloud SQL (PostgreSQL) | ✅ Connected | emergentdb, ewm database |
+| Cloud SQL (PostgreSQL) | ✅ Connected | emergentdb, iris database |
 | Redis | ⚠️ Pending | Usando lazy connect (localhost) |
 | CORS | ✅ Configured | Frontend puede comunicarse con backend |
 | Swagger Docs | ✅ Accessible | Documentación API disponible |
@@ -163,7 +163,7 @@ Se verificó que NO hay variables apuntando a `localhost` excepto Redis (que es 
 
 2. **Configurar Redis/Memory Store**
    ```bash
-   gcloud redis instances create emw-redis \
+   gcloud redis instances create iris-redis \
      --size=1 \
      --region=us-central1 \
      --redis-version=redis_7_0 \

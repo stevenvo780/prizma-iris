@@ -4,8 +4,9 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, LessThanOrEqual } from 'typeorm';
 import {
   MessageLog,
   MessageStatus,
@@ -630,6 +631,49 @@ export class MessagesService {
     return this.pendingMessagesService.getPendingMessageStats(userId);
   }
 
+  /**
+   * Recuperación DURABLE de mensajes programados/reintentos.
+   *
+   * Los envíos diferidos y los reintentos se agendan con setTimeout en memoria
+   * (baja latencia en el happy path), pero en Cloud Run / contenedores efímeros
+   * cualquier reinicio o escalado a cero pierde esos timers y los mensajes
+   * QUEUED/RETRYING quedan colgados sin recuperación.
+   *
+   * Este cron recorre la DB cada minuto y reprocesa los mensajes QUEUED/RETRYING
+   * cuya fecha programada ya venció (o sin fecha), garantizando entrega tras un
+   * reinicio. processMessage es seguro de reejecutar: solo envía si el mensaje
+   * sigue pendiente y persiste el estado final.
+   */
+  @Cron(CronExpression.EVERY_MINUTE)
+  async recoverDueScheduledMessages(): Promise<void> {
+    const now = new Date();
+
+    const due = await this.messageLogRepository.find({
+      where: [
+        { status: MessageStatus.QUEUED, scheduledAt: LessThanOrEqual(now) },
+        { status: MessageStatus.RETRYING },
+      ],
+      take: 200,
+      order: { scheduledAt: 'ASC' },
+    });
+
+    if (due.length === 0) return;
+
+    this.logger.log(
+      `🔁 Recuperando ${due.length} mensaje(s) programado(s)/en reintento tras posible reinicio`,
+    );
+
+    for (const messageLog of due) {
+      try {
+        await this.processMessage(messageLog);
+      } catch (err: any) {
+        this.logger.error(
+          `Recovery: fallo reprocesando messageLog ${messageLog.id}: ${err?.message}`,
+        );
+      }
+    }
+  }
+
   async bulkSend(
     bulkSendDto: BulkSendDto,
     userId: string,
@@ -637,10 +681,15 @@ export class MessagesService {
     totalMessages: number;
     messageLogs: MessageLog[];
   }> {
+    // Resolver destinatarios UNA sola vez y reutilizar el resultado tanto para
+    // validar el límite del plan como para construir el envío. Antes se llamaba
+    // getRecipients dos veces (duplicaba queries con joins y podía dar resultados
+    // distintos si los datos cambiaban entre llamadas).
+    const recipients = await this.getRecipients(bulkSendDto, userId);
+
     // ─── Verificar límites para cuentas gratuitas ───
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (user && user.role === UserRole.USER) {
-      const recipients = await this.getRecipients(bulkSendDto, userId);
       if (recipients.length > FREE_PLAN_LIMITS.MAX_BULK_RECIPIENTS) {
         throw new BadRequestException(
           `El plan gratuito permite envío masivo a máximo ${FREE_PLAN_LIMITS.MAX_BULK_RECIPIENTS} destinatarios por envío. ` +
@@ -659,8 +708,6 @@ export class MessagesService {
         'Template must be approved before bulk sending',
       );
     }
-
-    const recipients = await this.getRecipients(bulkSendDto, userId);
 
     if (recipients.length === 0) {
       throw new BadRequestException('No valid recipients found');
@@ -969,7 +1016,23 @@ export class MessagesService {
       },
     );
 
-    return response.data.messages[0].id;
+    return this.extractWhatsAppMessageId(response);
+  }
+
+  /**
+   * Extrae el id del mensaje de la respuesta de Meta de forma defensiva.
+   * Si Meta responde 200 sin `messages` (errores parciales, respuestas de
+   * estado o cambios de formato), lanza un error descriptivo en vez de un
+   * "Cannot read properties of undefined" que ocultaría la causa real.
+   */
+  private extractWhatsAppMessageId(response: any): string {
+    const id = response?.data?.messages?.[0]?.id;
+    if (!id) {
+      throw new Error(
+        `WhatsApp API did not return a message id: ${JSON.stringify(response?.data)}`,
+      );
+    }
+    return id;
   }
 
   private async sendTextMessage(
@@ -996,7 +1059,7 @@ export class MessagesService {
       },
     );
 
-    return response.data.messages[0].id;
+    return this.extractWhatsAppMessageId(response);
   }
 
   private async sendMediaMessage(
@@ -1059,7 +1122,7 @@ export class MessagesService {
       },
     );
 
-    return response.data.messages[0].id;
+    return this.extractWhatsAppMessageId(response);
   }
 
   /**
@@ -1119,7 +1182,11 @@ export class MessagesService {
 
   /**
    * Devuelve la cuenta de WhatsApp activa para el user.
-   * En dev, si no hay, creamos una dummy para que no explote todo.
+   *
+   * Auto-crear una cuenta dummy con accessToken 'dev-token' solo está permitido
+   * cuando se activa explícitamente la flag ALLOW_DEV_WA_ACCOUNT (no por NODE_ENV,
+   * que suele quedar sin setear o en 'staging' y disparaba la creación de cuentas
+   * falsas que luego ensuciaban la tabla y rompían los envíos contra Meta).
    */
   private async getActiveWhatsAppAccount(
     userId: string,
@@ -1128,7 +1195,11 @@ export class MessagesService {
       where: { userId, isActive: true },
     });
 
-    if (!account && process.env.NODE_ENV === 'development') {
+    if (
+      !account &&
+      process.env.ALLOW_DEV_WA_ACCOUNT === 'true' &&
+      process.env.NODE_ENV !== 'production'
+    ) {
       const suffix = Date.now().toString().slice(-6);
       const devAccount = this.whatsappAccountRepository.create({
         name: 'Dev Test Account',

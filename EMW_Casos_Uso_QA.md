@@ -1,7 +1,7 @@
-# EMW Platform - Casos de Uso para Testing QA
+# IRIS Platform - Casos de Uso para Testing QA
 
 ## Información del Proyecto
-- **Nombre**: EMW (Enterprise Messaging for WhatsApp)
+- **Nombre**: IRIS (Enterprise Messaging for WhatsApp)
 - **Versión**: 2.0.0
 - **Arquitectura**: Full-stack (NestJS + Next.js)
 - **Propósito**: Plataforma empresarial para gestión de mensajería WhatsApp
@@ -18,12 +18,12 @@
 ```json
 {
   "admin": {
-    "email": "admin@emw.com",
+    "email": "admin@iris.com",
     "password": "admin123",
     "role": "admin"
   },
   "user": {
-    "email": "user@emw.com", 
+    "email": "user@iris.com", 
     "password": "user123",
     "role": "user"
   }
@@ -49,7 +49,7 @@
 
 ## 🚀 CASO DE USO 1: Setup Empresarial Completo
 
-**Objetivo**: Validar que una nueva empresa puede configurar completamente su cuenta EMW desde cero hasta enviar su primer mensaje.
+**Objetivo**: Validar que una nueva empresa puede configurar completamente su cuenta IRIS desde cero hasta enviar su primer mensaje.
 
 **Tiempo Estimado**: 15-20 minutos  
 **Prioridad**: CRÍTICA  
@@ -64,7 +64,7 @@
 
 #### Paso 1: Registro inicial
 - **Acción**: Ir a `http://localhost:3000/login` → "Registrarse"
-- **Datos**: Email: `empresa.test@emw.com`, Password: `Test123!`, Nombre: `Empresa Test`
+- **Datos**: Email: `empresa.test@iris.com`, Password: `Test123!`, Nombre: `Empresa Test`
 - **Validación**: Usuario creado, token JWT generado, redirección a dashboard
 
 #### Paso 2: Configurar cuenta WhatsApp
@@ -821,4 +821,4 @@
 
 **Última Actualización**: 21 de Agosto, 2025  
 **Versión**: 2.0.0  
-**Responsable**: QA Team EMW
+**Responsable**: QA Team IRIS

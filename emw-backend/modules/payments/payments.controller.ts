@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Body, UseGuards, Request, Query, Param, Headers, UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { timingSafeEqual } from 'crypto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PaymentsService, CreatePreferenceDto } from './payments.service';
 
@@ -101,11 +102,24 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Force check and process expired subscriptions (cron / admin)' })
   @ApiResponse({ status: 200, description: 'Expired subscriptions processed' })
   async forceCheckExpired(@Headers('x-cron-secret') cronSecret: string) {
-    const expectedSecret = this.configService.get<string>('CRON_SECRET') || 'emw-cron-secret-2026';
-    if (cronSecret !== expectedSecret) {
+    // FAIL-CLOSED: sin CRON_SECRET configurado no se puede autenticar el cron.
+    // Antes había un fallback literal 'iris-cron-secret-2026' (público en el repo),
+    // que permitía a cualquiera disparar el degradado masivo de usuarios premium.
+    const expectedSecret = this.configService.get<string>('CRON_SECRET');
+    if (!expectedSecret) {
+      throw new UnauthorizedException('CRON_SECRET not configured');
+    }
+    if (!cronSecret || !this.safeEqual(cronSecret, expectedSecret)) {
       throw new UnauthorizedException('Invalid cron secret');
     }
     await this.paymentsService.handleExpiredSubscriptions();
     return { success: true, message: 'Expired subscriptions check completed' };
+  }
+
+  /** Comparación de strings resistente a timing attacks. */
+  private safeEqual(a: string, b: string): boolean {
+    const bufA = Buffer.from(a);
+    const bufB = Buffer.from(b);
+    return bufA.length === bufB.length && timingSafeEqual(bufA, bufB);
   }
 }

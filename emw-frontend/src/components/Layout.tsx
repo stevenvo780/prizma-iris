@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import Events from '@components/Events';
@@ -13,11 +13,25 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { token, renewToken, user } = useUser();
   const router = useRouter();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(renewToken, 55 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [renewToken]);
+    // Limpiar interval anterior si existe
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // Solo iniciar intervalo si hay token válido
+    if (token && renewToken) {
+      intervalRef.current = setInterval(renewToken, 55 * 60 * 1000);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [token, renewToken]);
 
   return (
     <div className='main-container'>

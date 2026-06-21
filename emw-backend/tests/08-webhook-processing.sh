@@ -12,7 +12,7 @@ API_URL="${API_URL:-http://localhost:3005/api/v2}"
 WEBHOOK_VERIFY_TOKEN="${WEBHOOK_VERIFY_TOKEN:-test-verify-token}"
 
 # Temporary files
-TEMP_DIR="/tmp/emw-webhook-test"
+TEMP_DIR="/tmp/iris-webhook-test"
 mkdir -p "$TEMP_DIR"
 
 # Cleanup function

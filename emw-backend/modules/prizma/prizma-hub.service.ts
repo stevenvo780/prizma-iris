@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { HubClient, EVENTS, validateEvent, EventEnvelopeSchema } from 'prizma-contracts';
 
 /**
- * PrizmaHubService — integración de Iris con el ecosistema Prizma (HubCentral).
+ * PrizmaHubService — integración de Iris con el ecosistema Prizma (Nous).
  *
  * Iris es dueño de emitir los eventos de notificación/mensajería WhatsApp:
  *   - NOTIFICATION_WHATSAPP ("notification.whatsapp") — intención de notificar.
@@ -20,11 +20,17 @@ export class PrizmaHubService {
 
   constructor(private readonly config: ConfigService) {
     this.hub = new HubClient({
-      // 'iris' is the new canonical source key; cast as 'emw' for backward compat
-      // with prizma-contracts versions that pre-date the Iris rename (< R1 publish).
-      source: 'emw' as any,
-      hubUrl: this.config.get<string>('NOUS_HUB_URL'),
-      secret: this.config.get<string>('NOUS_HUB_SECRET'),
+      // 'iris' is the canonical source key post-rename, but prizma-contracts@1.3.0
+      // (npm-published) only knows 'iris' in ServiceSourceSchema. We keep emitting
+      // 'iris' until the shared package is republished with 'iris' added. Remove
+      // the cast once @prizma/contracts supports 'iris' as a ServiceSource.
+      source: 'iris' as any,
+      hubUrl:
+        this.config.get<string>('PRIZMA_NOUS_URL') ||
+        this.config.get<string>('NOUS_HUB_URL'),
+      secret:
+        this.config.get<string>('PRIZMA_NOUS_SECRET') ||
+        this.config.get<string>('NOUS_HUB_SECRET'),
       throwOnError: false,
     });
   }
@@ -45,7 +51,7 @@ export class PrizmaHubService {
         eventId: 'local-validate',
         eventType,
         timestamp: new Date().toISOString(),
-        source: 'emw', // 'iris' alias — contracts package predates rename
+        source: 'iris', // 'iris' alias — pending @prizma/contracts publish with 'iris' source
         data,
         priority: opts.priority || 'normal',
       }),

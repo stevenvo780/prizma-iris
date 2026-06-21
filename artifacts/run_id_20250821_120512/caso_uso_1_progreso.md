@@ -1,5 +1,5 @@
 # 🚀 CASO DE USO 1: Setup Empresarial Completo - Ejecución API
-**Objetivo**: Validar que una nueva empresa puede configurar completamente su cuenta EMW desde cero hasta enviar su primer mensaje.
+**Objetivo**: Validar que una nueva empresa puede configurar completamente su cuenta IRIS desde cero hasta enviar su primer mensaje.
 
 **Run ID**: run_id_20250821_120512
 **Fecha**: 2025-08-21T17:05:12Z
@@ -15,7 +15,7 @@
 curl -X POST http://localhost:3001/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "empresa.test@emw.com",
+    "email": "empresa.test@iris.com",
     "password": "Test123!",
     "firstName": "Empresa",
     "lastName": "Test"
@@ -60,7 +60,7 @@ Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYTMxNmUxYi02NjI4LTQ0N2Et
 
 ### 🎯 **RESUMEN DE PASOS EJECUTADOS**
 
-1. **✅ Registro inicial**: Usuario `empresa.test@emw.com` creado exitosamente
+1. **✅ Registro inicial**: Usuario `empresa.test@iris.com` creado exitosamente
 2. **✅ Configurar cuenta WhatsApp**: Cuenta creada con credenciales reales de WhatsApp
 3. **✅ Activar cuenta WhatsApp**: Establecida como cuenta principal activa
 4. **✅ Crear primer template**: Template "Bienvenida Empresa" creado
@@ -72,7 +72,7 @@ Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYTMxNmUxYi02NjI4LTQ0N2Et
 
 **Usuario creado**:
 - ID: `0a316e1b-6628-447a-ba7f-311caa83a4a7`
-- Email: `empresa.test@emw.com`
+- Email: `empresa.test@iris.com`
 - Role: `user`
 - Status: `active`
 

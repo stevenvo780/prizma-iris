@@ -1,11 +1,15 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, forwardRef } from '@nestjs/common';
+import { NotificationController } from './notification.controller';
+import { MessagesModule } from '../messages/messages.module';
+import { QueueModule } from '../queue/queue.module';
 
 /**
  * API Real para Notificaciones WhatsApp - CRÍTICO FLUJO 1A
  *
- * Este módulo implementa los endpoints reales requeridos por Hub Central
- * para completar el Flujo 1A con notificaciones WhatsApp automáticas.
+ * Recibe eventos de Nous y los encola vía MessagesService (que resuelve
+ * la cuenta WhatsApp, crea el MessageLog y dispara el envío real).
+ * Requiere NOUS_SERVICE_USER_ID en .env para asociar los mensajes al
+ * usuario de servicio del conector.
  */
 
 export const NotificationAPIRoutes = [
@@ -68,9 +72,10 @@ export const NotificationAPIRoutes = [
 
 @Module({
   imports: [
-
+    forwardRef(() => MessagesModule),
+    QueueModule,
   ],
-  controllers: [],
+  controllers: [NotificationController],
   providers: [],
   exports: [],
 })

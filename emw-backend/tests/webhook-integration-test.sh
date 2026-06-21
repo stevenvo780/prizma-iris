@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# EMW Webhook Integration Tests
+# IRIS Webhook Integration Tests
 # Tests para el endpoint de notificaciones del Hub Central
 
 # Configuración
 EMW_API_URL="http://localhost:3001"
-WEBHOOK_SECRET="emw-webhook-secret-2024"
+WEBHOOK_SECRET="iris-webhook-secret-2024"
 
 # Colores para output
 RED='\033[0;31m'
@@ -72,7 +72,7 @@ run_test() {
     fi
 }
 
-echo -e "${BLUE}🚀 INICIANDO TESTS DE INTEGRACIÓN EMW WEBHOOK${NC}"
+echo -e "${BLUE}🚀 INICIANDO TESTS DE INTEGRACIÓN IRIS WEBHOOK${NC}"
 echo -e "${BLUE}==============================================${NC}"
 
 # Test 1: Health Check
@@ -80,7 +80,7 @@ run_test "Health Check" "GET" "/api/webhooks/health" "" "200"
 
 # Test 2: Webhook válido - Order Created
 payload_order_created='{
-  "orderId": "graf-order-1001",
+  "orderId": "hermes-order-1001",
   "orderNumber": "2024001",
   "status": "CREATED",
   "customerName": "María García",
@@ -104,7 +104,7 @@ run_test "Webhook Válido - Order Created" "POST" "/api/webhooks/notifications" 
 
 # Test 3: Webhook válido - Order Paid
 payload_order_paid='{
-  "orderId": "graf-order-1002", 
+  "orderId": "hermes-order-1002", 
   "orderNumber": "2024002",
   "status": "PAID",
   "customerName": "Carlos Mendoza",
@@ -120,7 +120,7 @@ run_test "Webhook Válido - Order Paid" "POST" "/api/webhooks/notifications" "$p
 
 # Test 4: Webhook válido - Delivery Created
 payload_delivery_created='{
-  "orderId": "graf-order-1003",
+  "orderId": "hermes-order-1003",
   "orderNumber": "2024003", 
   "status": "PROCESSING",
   "customerName": "Ana López",
@@ -138,7 +138,7 @@ run_test "Webhook Válido - Delivery Created" "POST" "/api/webhooks/notification
 
 # Test 5: Webhook válido - Order Shipped
 payload_order_shipped='{
-  "orderId": "graf-order-1004",
+  "orderId": "hermes-order-1004",
   "orderNumber": "2024004",
   "status": "SHIPPED", 
   "customerName": "Roberto Silva",
@@ -156,7 +156,7 @@ run_test "Webhook Válido - Order Shipped" "POST" "/api/webhooks/notifications" 
 
 # Test 6: Webhook con firma inválida
 payload_invalid='{
-  "orderId": "graf-order-1005",
+  "orderId": "hermes-order-1005",
   "orderNumber": "2024005",
   "notificationType": "order_created"
 }'
@@ -173,7 +173,7 @@ run_test "Webhook con JSON Inválido" "POST" "/api/webhooks/notifications" "$inv
 
 # Test 9: Tipo de notificación no soportado
 payload_unsupported='{
-  "orderId": "graf-order-1006",
+  "orderId": "hermes-order-1006",
   "orderNumber": "2024006",
   "notificationType": "unsupported_type",
   "customerName": "Test User",
@@ -186,7 +186,7 @@ run_test "Notificación No Soportada" "POST" "/api/webhooks/notifications" "$pay
 
 # Test 10: Order Delivered
 payload_delivered='{
-  "orderId": "graf-order-1007",
+  "orderId": "hermes-order-1007",
   "orderNumber": "2024007",
   "status": "DELIVERED",
   "customerName": "Laura Pinzón", 
@@ -217,9 +217,9 @@ if [ $FAILED_TESTS -eq 0 ]; then
     echo "💬 Mensajes contextuales por estado"
     echo "📊 Health check endpoint"
     
-    echo -e "\n${BLUE}🚀 CONFIGURACIÓN EMW:${NC}"
+    echo -e "\n${BLUE}🚀 CONFIGURACIÓN IRIS:${NC}"
     echo "🔗 Endpoint: POST /api/webhooks/notifications"
-    echo "🔑 Secret: emw-webhook-secret-2024"
+    echo "🔑 Secret: iris-webhook-secret-2024"
     echo "🌐 Puerto: 3001"
     echo "📝 Tipos soportados: 6 tipos de notificación"
     
