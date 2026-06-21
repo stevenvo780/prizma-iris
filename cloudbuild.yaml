@@ -7,8 +7,8 @@ steps:
       - '-t'
       - 'us-central1-docker.pkg.dev/udea-filosofia/cloud-run-source-deploy/prizma-iris:$COMMIT_SHA'
       - '-f'
-      - 'iris-backend/Dockerfile'
-      - 'iris-backend'
+      - 'emw-backend/Dockerfile'
+      - 'emw-backend'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: Push
