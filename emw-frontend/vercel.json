@@ -1,8 +1,7 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "installCommand": "rm -f package-lock.json && npm install --legacy-peer-deps",
+  "buildCommand": "cd ../../ && pnpm build:ds && cd apps/iris/emw-frontend && npm run build",
+  "installCommand": "cd ../../ && pnpm install --frozen-lockfile",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://iris-backend-6dalnsowyq-uc.a.run.app/api"
+    "NODE_ENV": "production"
   }
 }
