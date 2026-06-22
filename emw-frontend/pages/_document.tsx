@@ -6,8 +6,10 @@ export default function Document() {
       <Head>
         {/* Favicon & manifest */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
         <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#0066CC" />
 
