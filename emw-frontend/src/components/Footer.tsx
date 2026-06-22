@@ -8,7 +8,9 @@ const Footer = () => (
     style={{ padding: '15px', display: 'flex', justifyContent: 'flex-end' }}
   >
     <Row style={{ width: '100%' }}>
-      <p style={{ margin: '0', textAlign: 'right' }}>© Copyright Prizma.</p>
+      <p style={{ margin: '0', textAlign: 'right' }}>
+        © {new Date().getFullYear()} PRIZMA · Iris — Enterprise WhatsApp Messaging.
+      </p>
     </Row>
   </Container>
 );

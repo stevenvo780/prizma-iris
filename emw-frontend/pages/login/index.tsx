@@ -1,5 +1,4 @@
 import React, { useState, FormEvent } from 'react';
-import Head from 'next/head';
 import { Button, Card, CardBody, Modal, Badge, Input } from 'prizma-ui';
 import Image from 'next/image';
 import {
@@ -9,17 +8,21 @@ import {
 } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
 import { FcGoogle } from 'react-icons/fc';
-import logo from '@public/iris-logo.png';
 import useUser from '@store/user';
 import useUI from '@store/ui';
 import { ProviderName } from '@utils/firebase.config';
 import Register from '@components/auth/Register';
 import PasswordResetModal from '@components/auth/PasswordResetModal';
 import Events from '@components/Events';
+import SeoHead from '@components/SeoHead';
+
+// Wordmark: dark version for light backgrounds, light for dark
+const WORDMARK_DARK = '/img/prizma-wordmark.png';
+const WORDMARK_LIGHT = '/img/prizma-wordmark-light.png';
 
 const features = [
   { icon: <FaWhatsapp size={36} />, title: 'WhatsApp Business API', desc: 'Conecta tu cuenta oficial de WhatsApp Business y gestiona todas las conversaciones desde un solo lugar.', color: '#25D366' },
-  { icon: <FaPaperPlane size={36} />, title: 'Mensajes Masivos', desc: 'Envía campañas a miles de clientes con plantillas aprobadas, segmentación por etiquetas y métricas en tiempo real.', color: '#3498db' },
+  { icon: <FaPaperPlane size={36} />, title: 'Mensajes Masivos', desc: 'Envía campañas a miles de clientes con plantillas aprobadas, segmentación por etiquetas y métricas en tiempo real.', color: '#0066CC' },
   { icon: <FaComments size={36} />, title: 'Chat en Tiempo Real', desc: 'Responde a tus clientes al instante con nuestro chat integrado. Envía texto, imágenes, documentos y más.', color: '#e74c3c' },
   { icon: <FaRobot size={36} />, title: 'Robot Auto-Respuesta', desc: 'Configura respuestas automáticas inteligentes para atender a tus clientes 24/7 sin intervención manual.', color: '#9b59b6' },
   { icon: <FaUsers size={36} />, title: 'Gestión de Clientes', desc: 'Importa, organiza y segmenta tu base de contactos con etiquetas personalizadas y campos customizables.', color: '#f39c12' },
@@ -81,42 +84,61 @@ const Landing = () => {
 
   return (
     <>
-      <Head>
-        <title>Iris — Enterprise WhatsApp Messaging | Prizma</title>
-        <meta
-          name="description"
-          content="Iris, la plataforma de WhatsApp Business API de Prizma: gestiona conversaciones, envía campañas masivas y automatiza respuestas para hacer crecer tu negocio."
-        />
-        <link rel="canonical" href="https://iris.prisma-enterprise.cloud/login" />
-        <meta property="og:title" content="Iris — Enterprise WhatsApp Messaging | Prizma" />
-        <meta property="og:description" content="Iris, la plataforma de WhatsApp Business API de Prizma: gestiona conversaciones, envía campañas masivas y automatiza respuestas para hacer crecer tu negocio." />
-        <meta property="og:image" content="https://iris.prisma-enterprise.cloud/og-image.png" />
-        <meta property="og:url" content="https://iris.prisma-enterprise.cloud/login" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <SeoHead
+        title="PRIZMA · Iris Login"
+        description="Inicia sesión en Iris · Plataforma PRIZMA — WhatsApp Business API: gestiona conversaciones, envía campañas masivas y automatiza respuestas para hacer crecer tu negocio."
+        pathname="/login"
+      />
       <Events />
 
       {/* ───── NAVBAR ───── */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
-        background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)',
+        background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(0,0,0,0.08)', padding: '12px 0',
       }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', flexShrink: 0 }} onClick={() => scrollTo('hero')}>
-            <Image src={logo} alt="Iris" width={40} height={40} />
-            <span className="d-none d-sm-inline" style={{ fontWeight: 700, fontSize: '1.3rem', color: '#0a827f' }}>Iris</span>
+          {/* Wordmark — replaces old iris-logo */}
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', flexShrink: 0 }}
+            onClick={() => scrollTo('hero')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && scrollTo('hero')}
+            aria-label="Ir al inicio"
+          >
+            <Image
+              src={WORDMARK_DARK}
+              alt="PRIZMA · Iris"
+              width={160}
+              height={48}
+              style={{ objectFit: 'contain' }}
+              priority
+            />
           </div>
+          {/* Nav links — changed from <a onClick> to <button> for keyboard + SR accessibility */}
           <div className="d-none d-md-flex" style={{ gap: 32, alignItems: 'center' }}>
-            <a onClick={() => scrollTo('features')} style={{ cursor: 'pointer', color: '#555', fontWeight: 500, textDecoration: 'none' }}>Funcionalidades</a>
-            <a onClick={() => scrollTo('plans')} style={{ cursor: 'pointer', color: '#555', fontWeight: 500, textDecoration: 'none' }}>Planes</a>
+            <button
+              onClick={() => scrollTo('features')}
+              style={{ cursor: 'pointer', color: '#555', fontWeight: 500, background: 'none', border: 'none', padding: '4px 0', fontSize: '1rem' }}
+              type="button"
+            >
+              Funcionalidades
+            </button>
+            <button
+              onClick={() => scrollTo('plans')}
+              style={{ cursor: 'pointer', color: '#555', fontWeight: 500, background: 'none', border: 'none', padding: '4px 0', fontSize: '1rem' }}
+              type="button"
+            >
+              Planes
+            </button>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <Button
               size="sm"
               variant="ghost"
               onClick={() => setShowLoginModal(true)}
-              style={{ borderRadius: 20, padding: '6px 16px', border: '2px solid #0a827f', color: '#0a827f', fontWeight: 600, whiteSpace: 'nowrap' }}
+              style={{ borderRadius: 20, padding: '6px 16px', border: '2px solid #0066CC', color: '#0066CC', fontWeight: 600, whiteSpace: 'nowrap' }}
             >
               <span className="d-none d-sm-inline">Iniciar sesión</span>
               <span className="d-sm-none">Entrar</span>
@@ -125,7 +147,7 @@ const Landing = () => {
               size="sm"
               variant="primary"
               onClick={() => setShowRegisterModal(true)}
-              style={{ borderRadius: 20, padding: '6px 16px', background: '#0a827f', border: 'none', color: '#fff', fontWeight: 600, whiteSpace: 'nowrap' }}
+              style={{ borderRadius: 20, padding: '6px 16px', background: '#0066CC', border: 'none', color: '#fff', fontWeight: 600, whiteSpace: 'nowrap' }}
             >
               <span className="d-none d-sm-inline">Registrarse</span>
               <span className="d-sm-none">Registro</span>
@@ -138,23 +160,24 @@ const Landing = () => {
       <section id="hero" style={{
         minHeight: '100vh', display: 'flex', alignItems: 'center',
         paddingTop: 80, paddingBottom: 40,
-        background: 'linear-gradient(135deg, #0a827f 0%, #0d9e9a 40%, #11b4af 70%, #25D366 100%)',
+        background: 'linear-gradient(135deg, #003d7a 0%, #0052A3 40%, #0066CC 70%, #3385D6 100%)',
         position: 'relative', overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%)',
+          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 40%)',
         }} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div className="row align-items-center">
             <div className="col-lg-7 text-white mb-5 mb-lg-0 text-center text-lg-start">
               <Badge tone="neutral" className="mb-3" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                <FaRocket style={{ color: '#0a827f' }} /> WhatsApp Business API al mejor precio
+                <FaRocket style={{ color: '#0066CC' }} /> WhatsApp Business API al mejor precio
               </Badge>
+              {/* SEO H1 */}
               <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: 24 }}>
-                Potencia tu negocio con{' '}
-                <span style={{ background: 'linear-gradient(90deg, #ffe082, #ffd54f)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  mensajería inteligente
+                Inicia sesión en Iris{' '}
+                <span style={{ display: 'block', fontSize: '0.75em', fontWeight: 400, opacity: 0.85, marginTop: 8 }}>
+                  Plataforma PRIZMA
                 </span>
               </h1>
               <p style={{ fontSize: '1.2rem', opacity: 0.92, lineHeight: 1.7, marginBottom: 32, maxWidth: 560, margin: '0 auto 32px' }}>
@@ -162,6 +185,7 @@ const Landing = () => {
                 con la plataforma más completa de WhatsApp Business API.
               </p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }} className="justify-content-lg-start">
+                {/* CTA con texto oscuro sobre fondo naranja — WCAG AA fix */}
                 <Button
                   size="lg"
                   variant="accent"
@@ -171,6 +195,7 @@ const Landing = () => {
                     background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
                     borderRadius: 30, padding: '14px 36px', fontWeight: 700, fontSize: '1.1rem',
                     boxShadow: '0 4px 20px rgba(243,156,18,0.4)',
+                    color: '#1a1a1a',
                   }}
                 >
                   Comenzar gratis
@@ -196,8 +221,16 @@ const Landing = () => {
                 backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.2)',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
               }}>
-                <Image src={logo} alt="Iris Logo" width={100} height={100} />
-                <h3 className="text-white mt-3 mb-2" style={{ fontWeight: 700 }}>Iris Platform</h3>
+                {/* Wordmark light (white) for dark hero background */}
+                <Image
+                  src={WORDMARK_LIGHT}
+                  alt="PRIZMA · Iris"
+                  width={180}
+                  height={54}
+                  style={{ objectFit: 'contain' }}
+                  priority
+                />
+                <h3 className="text-white mt-3 mb-2" style={{ fontWeight: 700 }}>PRIZMA · Iris</h3>
                 <p className="text-white mb-4" style={{ opacity: 0.85 }}>Enterprise WhatsApp Messaging</p>
                 <div style={{ display: 'grid', gap: 8 }}>
                   <Button
@@ -205,7 +238,7 @@ const Landing = () => {
                     variant="secondary"
                     block
                     style={{
-                      background: 'white', color: '#0a827f', border: 'none',
+                      background: 'white', color: '#0066CC', border: 'none',
                       borderRadius: 12, padding: '12px', fontWeight: 700, fontSize: '1.05rem',
                     }}
                   >
@@ -218,6 +251,7 @@ const Landing = () => {
                     style={{
                       background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
                       borderRadius: 12, padding: '12px', fontWeight: 700, fontSize: '1.05rem',
+                      color: '#1a1a1a',
                     }}
                   >
                     Crear cuenta gratis
@@ -240,7 +274,7 @@ const Landing = () => {
               { label: '✓ Plataforma escalable y segura' },
             ].map((s, i) => (
               <div className="col-6 col-md-3 mb-3 mb-md-0" key={i}>
-                <p style={{ color: '#0a827f', margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>{s.label}</p>
+                <p style={{ color: '#0066CC', margin: 0, fontSize: '1.05rem', fontWeight: 600 }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -294,7 +328,7 @@ const Landing = () => {
       <section id="plans" className="section-responsive" style={{ padding: 'clamp(40px, 8vw, 80px) 0', background: '#fff' }}>
         <div className="container">
           <div className="text-center mb-5">
-            <Badge tone="primary" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, marginBottom: 16, background: '#0a827f', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Badge tone="primary" style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: 20, marginBottom: 16, background: '#0066CC', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               <FaGem /> Planes
             </Badge>
             <h2 style={{ fontWeight: 800, fontSize: 'clamp(1.6rem, 4vw, 2.3rem)', color: '#222' }}>Un solo plan, todo incluido</h2>
@@ -305,15 +339,15 @@ const Landing = () => {
           <div className="row justify-content-center">
             <div className="col-md-8 col-lg-6">
               <Card style={{
-                border: '3px solid #0a827f', borderRadius: 24, overflow: 'hidden',
-                boxShadow: '0 12px 40px rgba(10,130,127,0.15)',
+                border: '3px solid #0066CC', borderRadius: 24, overflow: 'hidden',
+                boxShadow: '0 12px 40px rgba(0,102,204,0.15)',
               }}>
                 <div style={{
-                  background: 'linear-gradient(135deg, #0a827f, #0d9e9a)',
+                  background: 'linear-gradient(135deg, #003d7a, #0066CC)',
                   padding: '30px 24px', textAlign: 'center', color: 'white',
                 }}>
                   <Badge tone="warning" className="mb-2" style={{ fontSize: '0.8rem', padding: '6px 14px', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                    <FaStar /> MAS POPULAR
+                    <FaStar /> MÁS POPULAR
                   </Badge>
                   <h3 style={{ fontWeight: 800, marginBottom: 8 }}>Plan Premium</h3>
                   <div style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', fontWeight: 800, lineHeight: 1 }}>
@@ -329,11 +363,12 @@ const Landing = () => {
                         borderBottom: i < planFeatures.length - 1 ? '1px solid #f0f0f0' : 'none',
                         display: 'flex', alignItems: 'center', gap: 12,
                       }}>
-                        <FaCheck style={{ color: '#0a827f', flexShrink: 0 }} />
+                        <FaCheck style={{ color: '#0066CC', flexShrink: 0 }} />
                         <span style={{ color: '#444', fontSize: '0.95rem' }}>{feat}</span>
                       </li>
                     ))}
                   </ul>
+                  {/* CTA with WCAG-compliant dark text on orange */}
                   <Button
                     onClick={() => setShowRegisterModal(true)}
                     variant="accent"
@@ -344,6 +379,7 @@ const Landing = () => {
                       background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
                       borderRadius: 14, padding: '14px', fontWeight: 700, fontSize: '1.1rem',
                       boxShadow: '0 4px 20px rgba(243,156,18,0.3)', marginTop: 16,
+                      color: '#1a1a1a',
                     }}
                   >
                     Comenzar ahora
@@ -361,7 +397,7 @@ const Landing = () => {
       {/* ───── CTA FINAL ───── */}
       <section style={{
         padding: 'clamp(40px, 8vw, 80px) 0',
-        background: 'linear-gradient(135deg, #0a827f 0%, #0d9e9a 50%, #25D366 100%)',
+        background: 'linear-gradient(135deg, #003d7a 0%, #0066CC 50%, #3385D6 100%)',
         textAlign: 'center', color: 'white',
       }}>
         <div className="container">
@@ -370,10 +406,11 @@ const Landing = () => {
             ¿Listo para transformar tu comunicación?
           </h2>
           <p style={{ fontSize: '1.2rem', opacity: 0.9, maxWidth: 600, margin: '0 auto 32px' }}>
-            Únete a las empresas que ya están potenciando su negocio con Iris.
+            Únete a las empresas que ya están potenciando su negocio con PRIZMA · Iris.
             Comienza gratis y escala cuando lo necesites.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            {/* CTA with WCAG-compliant dark text on orange */}
             <Button
               size="lg"
               variant="accent"
@@ -382,6 +419,7 @@ const Landing = () => {
                 background: 'linear-gradient(135deg, #f39c12, #e67e22)', border: 'none',
                 borderRadius: 30, padding: '14px 40px', fontWeight: 700, fontSize: '1.1rem',
                 boxShadow: '0 4px 20px rgba(243,156,18,0.4)',
+                color: '#1a1a1a',
               }}
             >
               Crear cuenta gratis
@@ -402,14 +440,11 @@ const Landing = () => {
       <footer style={{ background: '#1a1a2e', color: 'rgba(255,255,255,0.6)', padding: '40px 0', textAlign: 'center' }}>
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 12 }}>
-            <Image src={logo} alt="Iris" width={32} height={32} />
-            <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'white' }}>Iris</span>
+            <Image src={WORDMARK_LIGHT} alt="PRIZMA · Iris" width={140} height={42} style={{ objectFit: 'contain' }} />
           </div>
           <p style={{ margin: 0, fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
-            © {new Date().getFullYear()} Iris — Enterprise WhatsApp Messaging by{' '}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/img/prizma-symbol.svg" alt="" width={18} height={18} style={{ borderRadius: 4 }} />
-            <a href="https://prisma-enterprise.cloud" target="_blank" rel="noopener noreferrer" style={{ color: '#0a827f' }}>Steven Vallejo</a>
+            © {new Date().getFullYear()} PRIZMA · Iris — Enterprise WhatsApp Messaging.{' '}
+            <a href="https://prisma-enterprise.cloud" target="_blank" rel="noopener noreferrer" style={{ color: '#3385D6' }}>prisma-enterprise.cloud</a>
           </p>
         </div>
       </footer>
@@ -420,7 +455,7 @@ const Landing = () => {
         onClose={() => setShowLoginModal(false)}
         title={
           <div style={{ textAlign: 'center', fontWeight: 700, width: '100%' }}>
-            <Image src={logo} alt="Iris" width={48} height={48} /><br />
+            <Image src={WORDMARK_DARK} alt="PRIZMA · Iris" width={140} height={42} style={{ objectFit: 'contain' }} /><br />
             Iniciar sesión
           </div>
         }
@@ -459,7 +494,7 @@ const Landing = () => {
             type="submit"
             disabled={isLoading}
             variant="primary"
-            style={{ background: '#0a827f', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 600, marginBottom: 8 }}
+            style={{ background: '#0066CC', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 600, marginBottom: 8 }}
           >
             {isLoading ? 'Cargando...' : 'Iniciar sesión'}
           </Button>
@@ -475,7 +510,7 @@ const Landing = () => {
             <Button
               variant="link"
               size="sm"
-              style={{ color: '#0a827f' }}
+              style={{ color: '#0066CC' }}
               onClick={() => { setShowLoginModal(false); setShowPasswordResetModal(true); }}
             >
               ¿Olvidaste tu contraseña?
@@ -487,7 +522,7 @@ const Landing = () => {
             <Button
               variant="link"
               size="sm"
-              style={{ color: '#0a827f', fontWeight: 600 }}
+              style={{ color: '#0066CC', fontWeight: 600 }}
               onClick={() => { setShowLoginModal(false); setShowRegisterModal(true); }}
             >
               Regístrate

@@ -55,7 +55,7 @@ const PlansPage: React.FC = () => {
       <div className='text-center mb-5'>
         <h1 className='display-4 fw-bold'>Plan Premium</h1>
         <p className='lead text-muted'>Potencia tu negocio con nuestro plan exclusivo</p>
-        <hr className='my-4' style={{ width: '50%', margin: '0 auto', borderColor: '#0a827f' }} />
+        <hr className='my-4' style={{ width: '50%', margin: '0 auto', borderColor: '#0066CC' }} />
       </div>
 
       <Row className='justify-content-center'>

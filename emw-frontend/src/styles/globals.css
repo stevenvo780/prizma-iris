@@ -1,14 +1,23 @@
 :root {
 
+  /* --- Prizma corporate blue palette (replaces teal) --- */
+  --prizma-blue: #0066CC;
+  --prizma-blue-dark: #0052A3;
+  --prizma-blue-light: #3385D6;
+
+  /* --- Typography --- */
+  --font-heading: 'Newsreader', Georgia, serif;
+  --font-body: 'Outfit', system-ui, -apple-system, sans-serif;
+
   --bg-color: #F5F5F5 !important;
   --font-color: #333333 !important;
   --white-color: #FFFFFF !important;
   --border-color: #DFDFE5 !important;
 
 
-  --primary-color: #0a827f !important; /* Iris teal — was legacy #1B3862 navy */
-  --primary-hover: #0c9e9a !important;
-  --primary-border: #0a827f !important;
+  --primary-color: #0066CC !important; /* Prizma corporate blue */
+  --primary-hover: #0052A3 !important;
+  --primary-border: #0066CC !important;
   --primary-text: #FFFFFF !important;
 
   --warning-color: #E9B44C !important;
@@ -38,9 +47,9 @@
   --danger-text: #FFFFFF !important;
 
 
-  --link-color: #0a827f !important;
-  --link-hover: #0c9e9a !important;
-  --link-border: #0a827f !important;
+  --link-color: #0066CC !important;
+  --link-hover: #0052A3 !important;
+  --link-border: #0066CC !important;
   --link-text: #FFFFFF !important;
 
 
@@ -53,7 +62,7 @@
   --navbar-color: #FFFFFF !important;
   --text-secondary: #666666 !important;
   --text-muted: #6b7280 !important; /* WCAG AA contrast fix: was #767676, now #6b7280 (4.6:1 on white) */
-  --card-title-color: #0a827f !important;
+  --card-title-color: #0066CC !important;
 }
 
 
@@ -63,6 +72,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-color);
   color: var(--font-color);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--font-heading);
 }
 
 

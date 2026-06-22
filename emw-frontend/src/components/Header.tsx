@@ -17,7 +17,8 @@ import {
   FaPaperPlane,
   FaHistory,
 } from 'react-icons/fa';
-import logo from '../../public/iris-logo.png';
+// Wordmark: dark text version for light navbar background
+const WORDMARK_DARK = '/img/prizma-wordmark.png';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import useUser from '@store/user';
 import useMessages from '@store/messages';
@@ -147,10 +148,10 @@ const Header = () => {
           transform: translateY(-1px);
         }
         .nav-link-modern.active {
-          background: #e74c3c;
+          background: #0066CC;
           color: white !important;
           font-weight: 600;
-          box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
+          box-shadow: 0 2px 10px rgba(0, 102, 204, 0.3);
         }
         .scheduler-section {
           display: flex;
@@ -181,7 +182,7 @@ const Header = () => {
           transition: all 0.3s ease;
         }
         .user-dropdown:hover {
-          background: #e74c3c;
+          background: #0066CC;
           color: white !important;
           transform: scale(1.1);
         }
@@ -264,7 +265,7 @@ const Header = () => {
             font-size: 0.8rem;
           }
           .nav-link-modern.active {
-            background: #e74c3c;
+            background: #0066CC;
           }
           .scheduler-section {
             flex-direction: row;
@@ -299,22 +300,20 @@ const Header = () => {
 
       <Navbar expand='lg' className='modern-header'>
         <Container fluid>
-          <Navbar.Brand href='https://www.prizma.co/' target='_blank' className='brand-section'>
+          <Navbar.Brand href='https://iris.prisma-enterprise.cloud/' className='brand-section'>
             <Image
-              src={logo}
-              alt='IRIS Logo'
-              width={40}
-              height={40}
-              style={{ borderRadius: '8px' }}
+              src={WORDMARK_DARK}
+              alt='PRIZMA · Iris'
+              width={140}
+              height={42}
+              style={{ objectFit: 'contain' }}
+              priority
             />
-            <div className='brand-text'>
-              <span className='brand-title'>IRIS</span>
-              {user && (
-                <span className='user-greeting'>
-                  Hola, {user.name?.split(' ')[0] || 'Usuario'}
-                </span>
-              )}
-            </div>
+            {user && (
+              <span className='user-greeting' style={{ marginLeft: 10 }}>
+                Hola, {user.name?.split(' ')[0] || 'Usuario'}
+              </span>
+            )}
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls='basic-navbar-nav' style={{ borderColor: 'rgba(255,255,255,0.3)' }} />

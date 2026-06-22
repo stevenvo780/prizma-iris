@@ -189,7 +189,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     <>
       {loading && (
         <RingLoader
-          color={'#0a827f'}
+          color={'#0066CC'}
           loading={loading}
           cssOverride={override}
           size={100}
@@ -225,7 +225,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <Col
               md={12}
               style={{
-                background: 'linear-gradient(135deg, #095169, #0a827f)',
+                background: 'linear-gradient(135deg, #003d7a, #0066CC)',
                 color: 'white',
                 padding: '3rem 2rem',
               }}
@@ -315,7 +315,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <Col
               md={5}
               style={{
-                background: 'linear-gradient(135deg, #095169, #0a827f)',
+                background: 'linear-gradient(135deg, #003d7a, #0066CC)',
                 color: 'white',
                 padding: '3rem 2rem',
               }}

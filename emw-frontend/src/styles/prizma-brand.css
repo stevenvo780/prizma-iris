@@ -10,78 +10,94 @@
  * Additive only: no selectors are removed; this just retints the framework.
  */
 
-/* --- Bootstrap CSS variables -> Prizma tokens --- */
+/* --- Bootstrap CSS variables -> Prizma corporate blue --- */
 :root {
-  --bs-primary: var(--c-accent-module);
-  --bs-primary-rgb: 67, 181, 166; /* #43b5a6 Iris teal, used by Bootstrap rgba() utilities */
-  --bs-link-color: var(--c-primary);
-  --bs-link-hover-color: var(--c-primary-700);
-  --bs-body-font-family: var(--c-font-sans);
+  --bs-primary: #0066CC;
+  --bs-primary-rgb: 0, 102, 204; /* #0066CC Prizma corporate blue */
+  --bs-link-color: #0066CC;
+  --bs-link-hover-color: #0052A3;
+  --bs-body-font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   --bs-body-color: var(--c-text);
   --bs-border-color: var(--c-border);
+  --bs-heading-font-family: 'Newsreader', Georgia, serif;
 }
 
 /* --- Base typography --- */
 body {
-  font-family: var(--c-font-sans);
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
   color: var(--c-text);
 }
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: var(--c-font-display);
+  font-family: 'Newsreader', Georgia, serif;
 }
 
 /* --- Links --- */
 a {
-  color: var(--c-primary);
+  color: #0066CC;
 }
 a:hover {
-  color: var(--c-primary-700);
+  color: #0052A3;
 }
 
-/* --- Buttons (Bootstrap primary -> module accent) --- */
+/* --- Buttons (Bootstrap primary -> Prizma corporate blue) --- */
 .btn-primary {
-  --bs-btn-bg: var(--c-accent-module);
-  --bs-btn-border-color: var(--c-accent-module);
-  --bs-btn-hover-bg: var(--c-accent-module);
-  --bs-btn-hover-border-color: var(--c-accent-module);
-  --bs-btn-active-bg: var(--c-accent-module);
-  --bs-btn-active-border-color: var(--c-accent-module);
-  --bs-btn-disabled-bg: var(--c-accent-module);
-  --bs-btn-disabled-border-color: var(--c-accent-module);
-  background-color: var(--c-accent-module);
-  border-color: var(--c-accent-module);
+  --bs-btn-bg: #0066CC;
+  --bs-btn-border-color: #0066CC;
+  --bs-btn-hover-bg: #0052A3;
+  --bs-btn-hover-border-color: #0052A3;
+  --bs-btn-active-bg: #0052A3;
+  --bs-btn-active-border-color: #0052A3;
+  --bs-btn-disabled-bg: #0066CC;
+  --bs-btn-disabled-border-color: #0066CC;
+  background-color: #0066CC;
+  border-color: #0066CC;
+  color: #ffffff;
 }
 
 .btn-outline-primary {
-  --bs-btn-color: var(--c-accent-module);
-  --bs-btn-border-color: var(--c-accent-module);
-  --bs-btn-hover-bg: var(--c-accent-module);
-  --bs-btn-hover-border-color: var(--c-accent-module);
-  --bs-btn-active-bg: var(--c-accent-module);
-  --bs-btn-active-border-color: var(--c-accent-module);
+  --bs-btn-color: #0066CC;
+  --bs-btn-border-color: #0066CC;
+  --bs-btn-hover-bg: #0066CC;
+  --bs-btn-hover-border-color: #0066CC;
+  --bs-btn-active-bg: #0052A3;
+  --bs-btn-active-border-color: #0052A3;
 }
 
 .btn-link {
-  --bs-btn-color: var(--c-primary);
-  --bs-btn-hover-color: var(--c-primary-700);
+  --bs-btn-color: #0066CC;
+  --bs-btn-hover-color: #0052A3;
 }
 
 /* --- Accent text / background utilities --- */
 .text-primary {
-  color: var(--c-accent-module) !important;
+  color: #0066CC !important;
 }
 .bg-primary {
-  background-color: var(--c-accent-module) !important;
+  background-color: #0066CC !important;
 }
 .border-primary {
-  border-color: var(--c-accent-module) !important;
+  border-color: #0066CC !important;
 }
 
 /* --- Form controls focus ring --- */
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--c-accent-module);
-  box-shadow: 0 0 0 0.2rem var(--c-accent-module-tint);
+  border-color: #0066CC;
+  box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+}
+
+/* --- CTA accent buttons (orange) — WCAG AA contrast fix --- */
+/* White text on #e67e22 gives 2.87:1, fails 3:1. Use dark text instead. */
+.btn-cta-accent {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  border: none;
+  color: #1a1a1a !important;  /* dark text: ~7:1 contrast on #f39c12 */
+  font-weight: 700;
+}
+.btn-cta-accent:hover,
+.btn-cta-accent:focus {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: #1a1a1a !important;
 }

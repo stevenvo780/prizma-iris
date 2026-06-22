@@ -23,7 +23,7 @@ const Events: React.FC = () => {
     <>
       {loading && (
         <RingLoader
-          color={'#0a827f'}
+          color={'#0066CC'}
           loading={loading}
           cssOverride={loaderOverride}
           size={100}

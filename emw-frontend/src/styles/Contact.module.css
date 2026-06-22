@@ -15,11 +15,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #0a827f;
+  color: #0066CC;
   text-decoration: none;
   margin: 10px 0;
   padding: 10px;
-  border: 1px solid #0a827f;
+  border: 1px solid #0066CC;
   border-radius: 5px;
   background-color: white;
   width: 100%;
@@ -27,7 +27,7 @@
 }
 
 .contactButton:hover {
-  background-color: #0a827f;
+  background-color: #0066CC;
   color: white;
   text-decoration: none;
 }

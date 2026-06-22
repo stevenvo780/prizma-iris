@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://iris.prisma-enterprise.cloud/sitemap.xml
