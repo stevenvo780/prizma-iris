@@ -2,6 +2,7 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install --legacy-peer-deps",
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "NEXT_SKIP_SWC_BINARY_VALIDATION": "1"
   }
 }

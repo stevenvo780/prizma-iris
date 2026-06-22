@@ -19,7 +19,7 @@ module.exports = {
     pagesBufferLength: 2,
   },
   staticPageGenerationTimeout: 120,
-  outputStandalone: true,
+  // outputStandalone: true,  // Only for Docker/Cloud Run, not needed for Vercel
   productionBrowserSourceMaps: false,
   // Desabilitar SSG por problema con <Html> import durante prerender
   // Usar SSR en su lugar (getServerSideProps o sin export)

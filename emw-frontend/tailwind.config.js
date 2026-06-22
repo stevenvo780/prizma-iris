@@ -1,4 +1,4 @@
-const prizmaTailwindPreset = require('../../../packages/tailwind-preset');
+const prizmaTailwindPreset = require('prizma-tailwind-preset');
 
 module.exports = {
   presets: [prizmaTailwindPreset],
