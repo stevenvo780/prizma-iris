@@ -1,13 +1,13 @@
 import { useState, ChangeEvent, FC, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
-import CustomerList from './CustomerList';
+import CustomerList from '@components/customers/CustomerList';
 import useCustomer from '@store/customers';
 import useUI from '@/store/ui';
 import { Customer } from '@utils/types';
-import CustomerDetailModal from './CustomerDetailModal';
-import CustomerFormModal from './CustomerFormModal';
-import UploadModal from './UploadModal';
+import CustomerDetailModal from '@components/customers/CustomerDetailModal';
+import CustomerFormModal from '@components/customers/CustomerFormModal';
+import UploadModal from '@components/customers/UploadModal';
 import Pagination from 'rc-pagination';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import 'rc-pagination/assets/index.css';
@@ -352,5 +352,9 @@ const Customers: FC = () => {
     </>
   );
 };
+
+export async function getStaticProps() {
+  return { props: {}, revalidate: 1 };
+}
 
 export default withAuthSync(Customers);

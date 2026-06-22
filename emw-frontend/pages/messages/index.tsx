@@ -7,7 +7,7 @@ import useMessages from '@store/messages';
 import useUI from '@store/ui';
 import useUser from '@store/user';
 import { useActiveWhatsappAccount } from '@/hooks/useActiveWhatsappAccount';
-import MessageModalNew from './MessageModalNew';
+import MessageModalNew from '@components/messages/MessageModalNew';
 import DeleteMessageModal from '@components/DeleteMessageModal';
 import { WppMS } from '@utils/types';
 import MessageListItem from '@components/MessageListItem';
@@ -500,5 +500,9 @@ const Messages: FC = () => {
     </>
   );
 };
+
+export async function getStaticProps() {
+  return { props: {}, revalidate: 1 };
+}
 
 export default withAuthSync(Messages);

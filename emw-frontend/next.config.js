@@ -1,5 +1,4 @@
 module.exports = {
-  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: false,
   },
@@ -12,4 +11,12 @@ module.exports = {
     unoptimized: true,
     domains: ['firebasestorage.googleapis.com', 'static.vecteezy.com', 'storage.googleapis.com'],
   },
+  experimental: {
+    isrMemoryCacheSize: 0,
+  },
+  onDemandEntries: {
+    maxInactiveAge: 1000 * 60 * 60,
+    pagesBufferLength: 2,
+  },
+  staticPageGenerationTimeout: 60,
 };

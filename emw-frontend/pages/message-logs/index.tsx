@@ -417,4 +417,8 @@ const MessageLogs: FC = () => {
   );
 };
 
+export async function getStaticProps() {
+  return { props: {}, revalidate: 1 };
+}
+
 export default withAuthSync(MessageLogs);

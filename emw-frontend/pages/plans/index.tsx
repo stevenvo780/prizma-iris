@@ -94,4 +94,8 @@ const PlansPage: React.FC = () => {
   );
 };
 
+export async function getStaticProps() {
+  return { props: {}, revalidate: 1 };
+}
+
 export default withAuthSync(PlansPage);

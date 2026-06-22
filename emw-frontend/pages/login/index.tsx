@@ -13,8 +13,8 @@ import logo from '@public/img/BANER.png';
 import useUser from '@store/user';
 import useUI from '@store/ui';
 import { ProviderName } from '@utils/firebase.config';
-import Register from './Register';
-import PasswordResetModal from './PasswordResetModal';
+import Register from '@components/auth/Register';
+import PasswordResetModal from '@components/auth/PasswordResetModal';
 import Events from '@components/Events';
 
 const features = [
@@ -591,5 +591,9 @@ const Landing = () => {
     </>
   );
 };
+
+export async function getStaticProps() {
+  return { props: {}, revalidate: 1 };
+}
 
 export default Landing;
