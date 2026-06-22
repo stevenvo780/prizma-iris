@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FC, useCallback, useMemo } from 'react';
+import SeoHead from '@components/SeoHead';
 import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Select from 'react-select';
 import styles from '@styles/Messages.module.css';
@@ -379,6 +380,7 @@ const Messages: FC = () => {
 
   return (
     <>
+      <SeoHead title="Mensajes" description="Gestiona y envía campañas de mensajes masivos por WhatsApp Business API desde Iris." pathname="/messages" noIndex />
       <Container className={styles.container}>
         <Row>
           <Col>

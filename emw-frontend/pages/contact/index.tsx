@@ -1,16 +1,14 @@
 import React from 'react';
-import Head from 'next/head';
 import Image from 'next/image';
 import { FaEnvelope, FaWhatsapp, FaGlobe } from 'react-icons/fa';
 import styles from '@styles/Contact.module.css';
 import contact_us from '@public/img/FondoContacto.png';
+import SeoHead from '@components/SeoHead';
 
 const Contact: React.FC = () => {
   return (
     <div className={styles.contactContainer}>
-      <Head>
-        <title>Contacto | Iris</title>
-      </Head>
+      <SeoHead title="Contacto" description="Contacta al equipo de Iris — Prizma: soporte técnico prioritario, WhatsApp y correo electrónico." pathname="/contact" />
       <div className='d-flex flex-column align-items-center text-center'>
         <div className='my-4'>
           <Image fetchPriority='high' src={contact_us} alt='Contáctanos' width={400} height={250} />

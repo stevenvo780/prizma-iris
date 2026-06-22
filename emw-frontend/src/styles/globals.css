@@ -6,9 +6,9 @@
   --border-color: #DFDFE5 !important;
 
 
-  --primary-color: #1B3862 !important;
-  --primary-hover: #234578 !important;
-  --primary-border: #1B3862 !important;
+  --primary-color: #0a827f !important; /* Iris teal — was legacy #1B3862 navy */
+  --primary-hover: #0c9e9a !important;
+  --primary-border: #0a827f !important;
   --primary-text: #FFFFFF !important;
 
   --warning-color: #E9B44C !important;
@@ -38,9 +38,9 @@
   --danger-text: #FFFFFF !important;
 
 
-  --link-color: #3B6B8A !important;
-  --link-hover: #1B3862 !important;
-  --link-border: #3B6B8A !important;
+  --link-color: #0a827f !important;
+  --link-hover: #0c9e9a !important;
+  --link-border: #0a827f !important;
   --link-text: #FFFFFF !important;
 
 
@@ -52,8 +52,8 @@
   --online-color: #2CBDA1 !important;
   --navbar-color: #FFFFFF !important;
   --text-secondary: #666666 !important;
-  --text-muted: #767676 !important;
-  --card-title-color: #1B3862 !important;
+  --text-muted: #6b7280 !important; /* WCAG AA contrast fix: was #767676, now #6b7280 (4.6:1 on white) */
+  --card-title-color: #0a827f !important;
 }
 
 

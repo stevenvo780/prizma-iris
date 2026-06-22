@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SeoHead from '@components/SeoHead';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import PaymentForm from '@components/payment/PaymentForm';
@@ -48,6 +49,8 @@ const PlansPage: React.FC = () => {
   const isPremium = user?.role === UserRoleOptions.PREMIUM;
 
   return (
+    <>
+      <SeoHead title="Planes" description="Conoce el Plan Premium de Iris: WhatsApp Business API, mensajes masivos ilimitados y soporte dedicado." pathname="/plans" />
     <Container className='py-5'>
       <div className='text-center mb-5'>
         <h1 className='display-4 fw-bold'>Plan Premium</h1>
@@ -91,6 +94,7 @@ const PlansPage: React.FC = () => {
         </Row>
       )}
     </Container>
+    </>
   );
 };
 

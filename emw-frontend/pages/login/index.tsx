@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
 import { FcGoogle } from 'react-icons/fc';
-import logo from '@public/img/BANER.png';
+import logo from '@public/iris-logo.png';
 import useUser from '@store/user';
 import useUI from '@store/ui';
 import { ProviderName } from '@utils/firebase.config';
@@ -87,7 +87,12 @@ const Landing = () => {
           name="description"
           content="Iris, la plataforma de WhatsApp Business API de Prizma: gestiona conversaciones, envía campañas masivas y automatiza respuestas para hacer crecer tu negocio."
         />
-        <link rel="icon" href="/img/prizma-favicon.svg" />
+        <link rel="canonical" href="https://iris.prisma-enterprise.cloud/login" />
+        <meta property="og:title" content="Iris — Enterprise WhatsApp Messaging | Prizma" />
+        <meta property="og:description" content="Iris, la plataforma de WhatsApp Business API de Prizma: gestiona conversaciones, envía campañas masivas y automatiza respuestas para hacer crecer tu negocio." />
+        <meta property="og:image" content="https://iris.prisma-enterprise.cloud/og-image.png" />
+        <meta property="og:url" content="https://iris.prisma-enterprise.cloud/login" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <Events />
 

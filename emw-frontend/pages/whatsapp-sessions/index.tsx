@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import SeoHead from '@components/SeoHead';
 import { Container, Row, Col, Card, Spinner, Alert, Button, Form, Modal, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import useUI from '@/store/ui';
@@ -301,6 +302,8 @@ const WhatsAppAccountsPage: FC = () => {
   );
 
   return (
+    <>
+      <SeoHead title="WhatsApp Sessions" description="Gestiona tus cuentas de WhatsApp Business API, conecta sesiones y configura credenciales en Iris." pathname="/whatsapp-sessions" noIndex />
     <Container className='py-4'>
       {/* Header */}
       <div className='d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2'>
@@ -704,6 +707,7 @@ const WhatsAppAccountsPage: FC = () => {
         </Modal.Body>
       </Modal>
     </Container>
+    </>
   );
 };
 

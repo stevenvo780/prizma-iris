@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, FC, useCallback } from 'react';
+import SeoHead from '@components/SeoHead';
 import { Container, Row, Col, Form, Button, Badge, Spinner } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import useUser from '@store/user';
@@ -88,7 +89,7 @@ const ChatPage: FC = () => {
         const convName = conversations.find(c => c.id === selectedPhone)?.customerName || selectedPhone || '';
         new Notification(`💬 ${convName}`, {
           body: lastMsg.content || '[Archivo]',
-          icon: '/img/logo_general.png',
+          icon: '/favicon-32.png',
           tag: `chat-${selectedPhone}`,
         });
       }
@@ -209,6 +210,7 @@ const ChatPage: FC = () => {
 
   return (
     <>
+      <SeoHead title="Chat" description="Chat en tiempo real con tus clientes por WhatsApp. Responde conversaciones, envía multimedia y gestiona tu bandeja desde Iris." pathname="/chat" noIndex />
       <style jsx>{`
         .chat-container {
           height: calc(100vh - 70px);
@@ -811,7 +813,7 @@ const ChatPage: FC = () => {
           ) : (
             <div className="empty-chat">
               <FaCommentDots className="empty-chat-icon" />
-              <h5 style={{ color: '#41525d', fontWeight: 500 }}>EMW Chat</h5>
+              <h5 style={{ color: '#41525d', fontWeight: 500 }}>Iris Chat</h5>
               <p style={{ fontSize: '0.85rem', maxWidth: 400, textAlign: 'center' }}>
                 Selecciona una conversación o inicia una nueva para comunicarte con tus clientes por WhatsApp en tiempo real.
               </p>

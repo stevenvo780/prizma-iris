@@ -13,7 +13,7 @@
 /* --- Bootstrap CSS variables -> Prizma tokens --- */
 :root {
   --bs-primary: var(--c-accent-module);
-  --bs-primary-rgb: 31, 184, 92; /* #1FB85C, used by Bootstrap rgba() utilities */
+  --bs-primary-rgb: 67, 181, 166; /* #43b5a6 Iris teal, used by Bootstrap rgba() utilities */
   --bs-link-color: var(--c-primary);
   --bs-link-hover-color: var(--c-primary-700);
   --bs-body-font-family: var(--c-font-sans);

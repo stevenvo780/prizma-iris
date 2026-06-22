@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FC, useCallback } from 'react';
+import SeoHead from '@components/SeoHead';
 import { Container, Row, Col, Table, Badge, Form, Button } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import { getMessageLogsAPI } from '@/api/messages';
@@ -216,6 +217,8 @@ const MessageLogs: FC = () => {
   };
 
   return (
+    <>
+      <SeoHead title="Historial de mensajes" description="Consulta el historial completo de mensajes enviados, estadísticas de entrega y lectura de campañas en Iris." pathname="/message-logs" noIndex />
     <div style={{ background: '#f5f6fa', minHeight: '100vh', paddingTop: '24px', paddingBottom: '40px' }}>
     <Container fluid style={{ padding: '0 40px' }}>
       <Row className="mb-4">
@@ -414,6 +417,7 @@ const MessageLogs: FC = () => {
       {renderPagination()}
     </Container>
     </div>
+    </>
   );
 };
 

@@ -17,7 +17,7 @@ import {
   FaPaperPlane,
   FaHistory,
 } from 'react-icons/fa';
-import logo from '../../public/img/logo_general.png';
+import logo from '../../public/iris-logo.png';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import useUser from '@store/user';
 import useMessages from '@store/messages';

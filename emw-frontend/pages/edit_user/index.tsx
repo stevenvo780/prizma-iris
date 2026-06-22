@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import SeoHead from '@components/SeoHead';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import useUser from '@store/user';
 import useUI from '@store/ui';
@@ -73,7 +74,9 @@ const EditProfile: React.FC = () => {
   };
 
   return (
-    <Container>
+    <>
+      <SeoHead title="Editar perfil" pathname="/edit_user" noIndex />
+      <Container>
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
           <h2>Editar Perfil</h2>
@@ -139,6 +142,7 @@ const EditProfile: React.FC = () => {
         </Col>
       </Row>
     </Container>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FC, useEffect } from 'react';
+import SeoHead from '@components/SeoHead';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import CustomerList from '@components/customers/CustomerList';
@@ -249,6 +250,7 @@ const Customers: FC = () => {
 
   return (
     <>
+      <SeoHead title="Clientes" description="Importa, organiza y segmenta tu base de contactos con etiquetas y campos personalizados en Iris." pathname="/customers" noIndex />
       <Container className={`container`}>
         <Row className='align-items-center g-2 mb-2'>
           <Col xs={12} md={3} lg={2}>

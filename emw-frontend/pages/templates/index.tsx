@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FC, useMemo } from 'react';
+import SeoHead from '@components/SeoHead';
 import {
   Container,
   Row,
@@ -374,7 +375,9 @@ const TemplatesPage: FC = () => {
   }, [templates, searchTerm]);
 
   return (
-    <Container className={styles.container}>
+    <>
+      <SeoHead title="Templates" description="Crea y gestiona plantillas de mensajes aprobadas por Meta para tus campañas de WhatsApp en Iris." pathname="/templates" noIndex />
+      <Container className={styles.container}>
       <Row className='mb-4'>
         <Col>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -802,6 +805,7 @@ const TemplatesPage: FC = () => {
         </Modal.Footer>
       </Modal>
     </Container>
+    </>
   );
 };
 
