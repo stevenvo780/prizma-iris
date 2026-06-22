@@ -18,10 +18,6 @@
     "postinstall": "node postinstall.js"
   },
   "dependencies": {
-    "prizma-brand": "file:../../../packages/brand",
-    "prizma-ui": "file:../../../packages/ui",
-    "prizma-tokens": "file:../../../packages/tokens",
-    "prizma-tailwind-preset": "file:../../../packages/tailwind-preset",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -36,6 +32,10 @@
     "js-cookie": "^3.0.5",
     "next": "^13.5.11",
     "next-cookies": "^2.0.3",
+    "prizma-brand": "file:../../../packages/brand",
+    "prizma-tailwind-preset": "file:../../../packages/tailwind-preset",
+    "prizma-tokens": "file:../../../packages/tokens",
+    "prizma-ui": "file:../../../packages/ui",
     "rc-pagination": "^4.1.0",
     "react": "18.3.1",
     "react-bootstrap": "^2.10.2",
@@ -52,6 +52,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.46.0",
+    "@swc/cli": "^0.8.1",
+    "@swc/core": "^1.15.43",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "20.14.2",
     "@types/react": "^18.3.3",
