@@ -1,6 +1,6 @@
 {
-  "buildCommand": "cd ../../ && pnpm build:ds && cd apps/iris/emw-frontend && npm run build",
-  "installCommand": "cd ../../ && pnpm install --frozen-lockfile",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
   "env": {
     "NODE_ENV": "production"
   }
