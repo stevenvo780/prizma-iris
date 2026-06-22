@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "installCommand": "echo 'Skipping install - using cached dependencies'",
+  "buildCommand": "bash build.vercel.sh",
+  "installCommand": "npm install --legacy-peer-deps",
   "env": {
     "NODE_ENV": "production",
     "NEXT_SKIP_SWC_BINARY_VALIDATION": "1"
