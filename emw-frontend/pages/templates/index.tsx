@@ -809,8 +809,8 @@ const TemplatesPage: FC = () => {
   );
 };
 
-export async function getStaticProps() {
-  return { props: {}, revalidate: 1 };
-}
-
 export default withAuthSync(TemplatesPage);
+
+export async function getServerSideProps(context: any) {
+  return { props: {} };
+}

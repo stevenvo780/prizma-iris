@@ -597,8 +597,8 @@ const Landing = () => {
   );
 };
 
-export async function getStaticProps() {
-  return { props: {}, revalidate: 1 };
-}
-
 export default Landing;
+
+export async function getServerSideProps(context: any) {
+  return { props: {} };
+}

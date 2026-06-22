@@ -355,8 +355,8 @@ const Customers: FC = () => {
   );
 };
 
-export async function getStaticProps() {
-  return { props: {}, revalidate: 1 };
-}
-
 export default withAuthSync(Customers);
+
+export async function getServerSideProps(context: any) {
+  return { props: {} };
+}

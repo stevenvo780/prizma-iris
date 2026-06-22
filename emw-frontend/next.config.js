@@ -18,5 +18,9 @@ module.exports = {
     maxInactiveAge: 1000 * 60 * 60,
     pagesBufferLength: 2,
   },
-  staticPageGenerationTimeout: 60,
+  staticPageGenerationTimeout: 120,
+  outputStandalone: true,
+  productionBrowserSourceMaps: false,
+  // Desabilitar SSG por problema con <Html> import durante prerender
+  // Usar SSR en su lugar (getServerSideProps o sin export)
 };
